@@ -97,12 +97,13 @@ for x in range(1, CONF["task"]["blocks"]):
         if showLeft:
             datalog["hemifield"] = "left"
             screen.show_left()
-            x = random.uniform(-2, 0) - CONF["task"]["maxRadius"]
+            x = random.uniform(-2 + CONF["task"]["maxRadius"],
+                               0 - CONF["task"]["maxRadius"])
         else:
             datalog["hemifield"] = "right"
             screen.show_right()
-        y = random.choice([-1, 1])*(random.uniform(0, 2) -
-                                    CONF["task"]["maxRadius"])
+        y = random.uniform(0 + CONF["task"]["maxRadius"],
+                           2 - CONF["task"]["maxRadius"])
 
         # start
         delayTimer = core.CountdownTimer(delay)
