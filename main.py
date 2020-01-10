@@ -140,6 +140,7 @@ for x in range(1, CONF["task"]["blocks"]):
         # run stopwatch
         Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
+        print(x, y)
         screen.start_spot(x, y)
         keys = []
         while not keys:

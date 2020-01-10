@@ -126,16 +126,10 @@ class Screen:
         self.window.flip()
 
     def shrink_spot(self, size):
-        print(self.CONF["task"]["maxRadius"]*size)
         self.spot.radius = self.CONF["task"]["maxRadius"]*size
         self.spot.fillColor = "blue"
         self._draw_background()
         self.spot.draw()
-        self.window.flip()
-
-    def start_countdown(self):
-        self.show_counter(0)
-        self.set_counter_color("white")
         self.window.flip()
 
     def show_counter(self, time, colored=False):
