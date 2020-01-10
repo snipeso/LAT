@@ -68,24 +68,13 @@ class Screen:
             units="norm")
 
         # setup stopwatch
-        fm = textbox.getFontManager()
-        fonts = fm.getFontFamilyStyles()
-
-        # self.counter = visual.TextStim(self.window)
-        self.counter = visual.TextBox(window=self.window,
-                                      # border_color=[-1, -1, 1],
-                                      grid_color=[-1, -1, 1],
-                                      textgrid_shape=(10, 1),
-                                      # grid_stroke_width=1,
-                                      # textgrid_shape=[20, 4],
-                                      font_color=[1, 1, 1],
-                                      size=(1, 1),
-                                      font_size=41,
-                                      pos=(0, 0.25),
-                                      grid_horz_justification='center',
-                                      grid_vert_justification='center',
-                                      # units='norm',
-                                      )
+        self.spot = visual.Circle(
+            self.window,
+            pos=(.5, 0),
+            edges=100,
+            fillColor=CONF["task"]["color"],
+            lineColor=CONF["task"]["color"],
+        )
 
     def show_overview(self):
         # self.counter.draw()
@@ -106,19 +95,42 @@ class Screen:
         self.cue.draw()
         self.window.flip()
 
-    def show_left(self):
-        self.left_on.draw()
+    def _draw_background(self):
+        if self.backgroundLeft:
+            self.left_on.draw()
+        else:
+            self.right_on.draw()
+
         self.fixation_box.draw()
+
+    def show_left(self):
+        self.backgroundLeft = True
+        self._draw_background()
         self.window.flip()
 
     def show_right(self):
-        self.right_on.draw()
-        self.fixation_box.draw()
+        self.backgroundLeft = False
+        self._draw_background()
         self.window.flip()
 
     def flash_fixation_box(self, color):
         self.fixation_box.fillColor = color
         self.fixation_box.draw()
+        self.window.flip()
+
+    def start_spot(self, x, y):
+        self.spot.pos = [x, y]
+        self.spot.radius = self.CONF["task"]["maxRadius"]
+        self._draw_background()
+        self.spot.draw()
+        self.window.flip()
+
+    def shrink_spot(self, size):
+        print(self.CONF["task"]["maxRadius"]*size)
+        self.spot.radius = self.CONF["task"]["maxRadius"]*size
+        self.spot.fillColor = "blue"
+        self._draw_background()
+        self.spot.draw()
         self.window.flip()
 
     def start_countdown(self):

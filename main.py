@@ -72,6 +72,7 @@ sequence_number = 0
 
 for x in range(1, CONF["task"]["blocks"]):
 
+    showLeft = not showLeft  # switches to the opposite side after each block
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
 
     while blockTimer.getTime() > 0:
@@ -92,15 +93,19 @@ for x in range(1, CONF["task"]["blocks"]):
         datalog["delay"] = delay
         logging.info('Starting delay of %s seconds', delay)
 
-        # start
-        delayTimer = core.CountdownTimer(delay)
-
+        # show correctly illuminated screen
         if showLeft:
             datalog["hemifield"] = "left"
             screen.show_left()
+            x = random.uniform(-2, 0) - CONF["task"]["maxRadius"]
         else:
             datalog["hemifield"] = "right"
             screen.show_right()
+        y = random.choice([-1, 1])*(random.uniform(0, 2) -
+                                    CONF["task"]["maxRadius"])
+
+        # start
+        delayTimer = core.CountdownTimer(delay)
 
         extraKeys = []
         while delayTimer.getTime() > 0:
@@ -125,9 +130,7 @@ for x in range(1, CONF["task"]["blocks"]):
         # Stimulus presentation
 
         # initialize stopwatch
-        Timer = core.Clock()
-        keys = []
-        Skipped = False
+        Missed = False
 
         def onFlip():  # TODO: does this go somewhere else?
             kb.clock.reset()
@@ -135,24 +138,24 @@ for x in range(1, CONF["task"]["blocks"]):
             # TODO: send trigger
 
         # run stopwatch
+        Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
-        screen.start_countdown()
+        screen.start_spot(x, y)
+        keys = []
         while not keys:
             keys = kb.getKeys(waitRelease=False)
-            screen.show_counter(Timer.getTime())
-            screen.window.flip()
-
-            # end if no answer comes in time
-            if Timer.getTime() > CONF["task"]["warningTime"]:
-                Skipped = True
+            if Timer.getTime() <= 0:
+                Missed = True
                 break
+
+            radiusPercent = Timer.getTime()/CONF["task"]["maxTime"]
+            screen.shrink_spot(radiusPercent)
 
         #########
         # Outcome
 
-        if Skipped:
-            # Alarm.play()
-            logging.info("participant fell asleep")
+        if Missed:  # TODO: make alarm if no keypress for mroe than 5 seconds
+            logging.info("missed")
             datalog["skipped"] = True
 
         else:
