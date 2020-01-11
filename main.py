@@ -70,7 +70,7 @@ logging.info('Initialization completed')
 
 sequence_number = 0
 
-for x in range(1, CONF["task"]["blocks"]):
+for block in range(1, CONF["task"]["blocks"]):
 
     showLeft = not showLeft  # switches to the opposite side after each block
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
@@ -87,12 +87,6 @@ for x in range(1, CONF["task"]["blocks"]):
         delay = random.uniform(
             CONF["fixation"]["minDelay"], CONF["fixation"]["maxDelay"])
 
-        # log
-        datalog["block"] = x
-        datalog["sequence_number"] = sequence_number
-        datalog["delay"] = delay
-        logging.info('Starting delay of %s seconds', delay)
-
         # show correctly illuminated screen
         if showLeft:
             datalog["hemifield"] = "left"
@@ -104,6 +98,14 @@ for x in range(1, CONF["task"]["blocks"]):
             screen.show_right()
         y = random.uniform(0 + CONF["task"]["maxRadius"],
                            2 - CONF["task"]["maxRadius"])
+
+        # log
+        datalog["block"] = block
+        datalog["sequence_number"] = sequence_number
+        datalog["delay"] = delay
+        datalog["position"] = [x, y]
+        logging.info(
+            'Starting delay of %s seconds in position x=%s, y=%s', delay, x, y)
 
         # start
         delayTimer = core.CountdownTimer(delay)
