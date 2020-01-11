@@ -71,7 +71,7 @@ logging.info('Initialization completed')
 sequence_number = 0
 
 for block in range(1, CONF["task"]["blocks"]):
-
+    print(showLeft)
     showLeft = not showLeft  # switches to the opposite side after each block
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
 
@@ -91,16 +91,16 @@ for block in range(1, CONF["task"]["blocks"]):
         if showLeft:
             datalog["hemifield"] = "left"
             screen.show_left()
-            x = random.uniform(-2 + CONF["task"]["maxRadius"],
+            x = random.uniform(-1 + CONF["task"]["maxRadius"],
                                0 - CONF["task"]["maxRadius"])
         else:
             datalog["hemifield"] = "right"
             screen.show_right()
             x = random.uniform(
-                0 + CONF["task"]["maxRadius"], 2 - CONF["task"]["maxRadius"])
+                0 + CONF["task"]["maxRadius"], 1 - CONF["task"]["maxRadius"])
 
-        y = random.uniform(-2 + CONF["task"]["maxRadius"],
-                           2 - CONF["task"]["maxRadius"])
+        y = random.uniform(-1 + CONF["task"]["maxRadius"],
+                           1 - CONF["task"]["maxRadius"])
 
         # log
         datalog["block"] = block
@@ -144,16 +144,19 @@ for block in range(1, CONF["task"]["blocks"]):
         # run stopwatch
         Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
+
         screen.start_spot(x, y)
         keys = []
+        print("hello!_______________")
+        logging.info("waiting for schrinking to start")
         while not keys:
             keys = kb.getKeys(waitRelease=False)
+            radiusPercent = Timer.getTime()/CONF["task"]["maxTime"]
+            screen.shrink_spot(radiusPercent)
+
             if Timer.getTime() <= 0:
                 Missed = True
                 break
-
-            radiusPercent = Timer.getTime()/CONF["task"]["maxTime"]
-            screen.shrink_spot(radiusPercent)
 
         #########
         # Outcome

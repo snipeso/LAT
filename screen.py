@@ -70,10 +70,8 @@ class Screen:
         # setup stopwatch
         self.spot = visual.Circle(
             self.window,
-            pos=(.5, 0),
             edges=100,
-            fillColor=CONF["task"]["color"],
-            lineColor=CONF["task"]["color"],
+            units="norm"
         )
 
     def show_overview(self):
@@ -93,14 +91,6 @@ class Screen:
         self.cue.setText(word)
         self.cue.draw()
         self.window.flip()
-
-    def _draw_background(self):
-        if self.backgroundLeft:
-            self.left_on.draw()
-        else:
-            self.right_on.draw()
-
-        self.fixation_box.draw()
 
     def show_left(self):
         self.backgroundLeft = True
@@ -142,6 +132,14 @@ class Screen:
         self._draw_background()
         self.fixation_box.draw()
         self.window.flip()
+
+    def _draw_background(self):
+        if self.backgroundLeft:
+            self.left_on.draw()
+        else:
+            self.right_on.draw()
+
+        self.fixation_box.draw()
 
     def show_result(self, time):
         # gives different color stimulus depending on result
