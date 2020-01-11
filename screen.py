@@ -77,7 +77,6 @@ class Screen:
         )
 
     def show_overview(self):
-        # self.counter.draw()
         self.task.draw()
         self.session.draw()
         self.window.flip()
@@ -116,7 +115,7 @@ class Screen:
     def flash_fixation_box(self):
         self._flip_fixation_color(self.CONF["task"]["earlyColor"])
         core.wait(self.CONF["fixation"]["errorFlash"])
-        self._flip_fixation_color(self.CONF["fixation"]["fillColor"])
+        self._flip_fixation_color(self.CONF["fixation"]["boxColor"])
 
     def start_spot(self, x, y):
         self.spot.pos = [x, y]
@@ -139,6 +138,8 @@ class Screen:
 
     def _flip_fixation_color(self, color):
         self.fixation_box.fillColor = color
+        self.fixation_box.lineColor = color
+        self._draw_background()
         self.fixation_box.draw()
         self.window.flip()
 

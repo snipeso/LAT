@@ -96,7 +96,10 @@ for block in range(1, CONF["task"]["blocks"]):
         else:
             datalog["hemifield"] = "right"
             screen.show_right()
-        y = random.uniform(0 + CONF["task"]["maxRadius"],
+            x = random.uniform(
+                0 + CONF["task"]["maxRadius"], 2 - CONF["task"]["maxRadius"])
+
+        y = random.uniform(-2 + CONF["task"]["maxRadius"],
                            2 - CONF["task"]["maxRadius"])
 
         # log
@@ -141,7 +144,6 @@ for block in range(1, CONF["task"]["blocks"]):
         # run stopwatch
         Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
-        print(x, y)
         screen.start_spot(x, y)
         keys = []
         while not keys:
