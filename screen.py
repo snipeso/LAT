@@ -71,7 +71,7 @@ class Screen:
         self.spot = visual.Circle(
             self.window,
             edges=100,
-            units="norm"
+            units="cm"
         )
 
     def show_overview(self):
