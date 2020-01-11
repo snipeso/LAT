@@ -7,11 +7,11 @@ class Screen:
     def __init__(self, CONF):
         self.CONF = CONF
         self.window = visual.Window(
-            size=CONF["screen"]["size"],
+            # size=CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"],
             color=CONF["fixation"]["colorOff"],
             # display_resolution=CONF["screen"]["resolution"],
-            # monitor=CONF["screen"]["monitor"],
-            fullscr=CONF["screen"]["full"], units="norm",
+            monitor=CONF["screen"]["monitor"],
+            fullscr=CONF["screen"]["full"], units="cm",
             allowGUI=True
         )
 
@@ -71,7 +71,7 @@ class Screen:
         self.spot = visual.Circle(
             self.window,
             edges=100,
-            units="cm"
+            units="norm"
         )
 
     def show_overview(self):
@@ -109,11 +109,15 @@ class Screen:
 
     def start_spot(self, x, y):
         self.spot.pos = [x, y]
+        # TODO: make centimeter thing work, and depend on screen size
         self.spot.radius = self.CONF["task"]["maxRadius"]
         self._set_spot_color(self.CONF["task"]["color"])
         self._draw_background()
         self.spot.draw()
         self.window.flip()
+
+    # def _norm2cm(self, x, y):
+    #     return [x*self.CONF["screen"]["screenSize"][0]/2,  y*self.CONF["screen"]["screenSize"][1]/2]
 
     def shrink_spot(self, size, colored=False):
         self.spot.radius = self.CONF["task"]["maxRadius"]*size
@@ -138,7 +142,6 @@ class Screen:
             self.left_on.draw()
         else:
             self.right_on.draw()
-
         self.fixation_box.draw()
 
     def show_result(self, time):

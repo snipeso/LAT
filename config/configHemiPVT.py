@@ -3,7 +3,7 @@ from config.configSession import CONF
 CONF.update({
     "task": {
         "name": "hemiPVT",
-        "duration": 2 * 60,  # duration of a block, in seconds
+        "duration": 30,  # 2 * 60,  # duration of a block, in seconds
         "blocks": 8,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
@@ -11,7 +11,7 @@ CONF.update({
         "victoryColor": "green",
         "earlyColor": "yellow",
         "color": "grey",
-        "maxRadius": .1,  # in norm units
+        "maxRadius": 2,  # in cm
     },
     "fixation": {
         "colorOff": "black",
