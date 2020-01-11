@@ -121,9 +121,7 @@ for x in range(1, CONF["task"]["blocks"]):
                 extraKeys.append(mainClock.getTime())
 
                 # Flash the fixation box to indicate unexpected key press
-                screen.flash_fixation_box(CONF["task"]["earlyColor"])
-                core.wait(CONF["fixation"]["errorFlash"])
-                screen.flash_fixation_box(CONF["fixation"]["fillColor"])
+                screen.flash_fixation_box()
 
             core.wait(0.0005)
 
@@ -158,7 +156,7 @@ for x in range(1, CONF["task"]["blocks"]):
 
         if Missed:  # TODO: make alarm if no keypress for mroe than 5 seconds
             logging.info("missed")
-            datalog["skipped"] = True
+            datalog["missed"] = True
 
         else:
             # show result

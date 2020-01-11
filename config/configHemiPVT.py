@@ -9,7 +9,8 @@ CONF.update({
         "maxTime": 1,  # over this, RT considered a lapse
         "warningTime": 5,  # in seconds, time before a tone plays to wake participant up TODO: make this happen 1s after x consecutive lapses
         "victoryColor": "green",
-        "color": "green",
+        "earlyColor": "yellow",
+        "color": "grey",
         "maxRadius": .1,  # in norm units
     },
     "fixation": {

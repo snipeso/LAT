@@ -113,47 +113,45 @@ class Screen:
         self._draw_background()
         self.window.flip()
 
-    def flash_fixation_box(self, color):
-        self.fixation_box.fillColor = color
-        self.fixation_box.draw()
-        self.window.flip()
+    def flash_fixation_box(self):
+        self._flip_fixation_color(self.CONF["task"]["earlyColor"])
+        core.wait(self.CONF["fixation"]["errorFlash"])
+        self._flip_fixation_color(self.CONF["fixation"]["fillColor"])
 
     def start_spot(self, x, y):
         self.spot.pos = [x, y]
         self.spot.radius = self.CONF["task"]["maxRadius"]
+        self._set_spot_color(self.CONF["task"]["color"])
         self._draw_background()
         self.spot.draw()
         self.window.flip()
 
-    def shrink_spot(self, size):
+    def shrink_spot(self, size, colored=False):
         self.spot.radius = self.CONF["task"]["maxRadius"]*size
-        self.spot.fillColor = "blue"
+
         self._draw_background()
         self.spot.draw()
         self.window.flip()
 
-    def show_counter(self, time, colored=False):
-        speed = round(1000*time)
-        text = "{}   ".format(speed)  # hack to show the relevant digits
-        self.counter.setText(text)
-        if colored:
-            if speed < self.CONF["task"]["minTime"]:
-                self.set_counter_color(self.CONF["task"]["earlyColor"])
-            elif speed < self.CONF["task"]["maxTime"]:
-                self.set_counter_color(self.CONF["task"]["victoryColor"])
-            else:
-                self.set_counter_color(self.CONF["task"]["lateColor"])
+    def _set_spot_color(self, color):
+        self.spot.fillColor = color
+        self.spot.lineColor = color
 
-        self.counter.draw()
-        return speed
-
-    def set_counter_color(self, color):
-        self.counter.setFontColor(color)
+    def _flip_fixation_color(self, color):
+        self.fixation_box.fillColor = color
+        self.fixation_box.draw()
+        self.window.flip()
 
     def show_result(self, time):
         # gives different color stimulus depending on result
-        speed = self.show_counter(time, colored=True)
-        # self.counter.setText(str(speed))
+        radiusPercent = (self.CONF["task"]["maxTime"] -
+                         time) / self.CONF["task"]["maxTime"]
+        if time < self.CONF["task"]["minTime"]:
+            self.flash_fixation_box()
+            return
+        elif time < self.CONF["task"]["maxTime"]:
+            self._set_spot_color(self.CONF["task"]["victoryColor"])
+        else:
+            return
 
-        self.counter.draw()
-        self.window.flip()
+        self.shrink_spot(radiusPercent)
