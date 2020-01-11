@@ -11,7 +11,7 @@ CONF.update({
         "victoryColor": "green",
         "earlyColor": "yellow",
         "color": "grey",
-        "maxRadius": 2,  # in cm
+        "maxRadius": 2,  # in % of screen width
     },
     "fixation": {
         "colorOff": "black",
@@ -20,8 +20,8 @@ CONF.update({
         "width": .2,
         "boxColor": "red",
         "errorFlash": 0.1,  # in seconds, how long to flash box if key pushed during delay
-        "minDelay":  2,  # 2,  # in seconds, minimum delay between stimuli
-        "maxDelay": 10,  # 10,  # maximum delay between stimuli
+        "minDelay":  1,  # 2,  # 2,  # in seconds, minimum delay between stimuli
+        "maxDelay": 2,  # 10,  # 10,  # maximum delay between stimuli
         "scoreTime": 0.5  # in seconds, time to show final score
     },
     "instructions": {
@@ -29,3 +29,12 @@ CONF.update({
         "startPrompt": "Press any key to start. Press q to quit."
     },
 })
+
+
+print("old size is:")
+print(CONF["screen"]["size"])
+CONF["screen"]["size"] = CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"]
+print("new size is:")
+print(CONF["screen"]["size"])
+
+CONF["screen"]["resolution"] = CONF["screen"]["resolution"] if CONF["screen"]["full"] else CONF["screen"]["debugResolution"]

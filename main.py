@@ -88,19 +88,24 @@ for block in range(1, CONF["task"]["blocks"]):
             CONF["fixation"]["minDelay"], CONF["fixation"]["maxDelay"])
 
         # show correctly illuminated screen
+        print(CONF["screen"]["size"])
+        print(CONF["screen"]["size"][0])
+        rightBorder = CONF["screen"]["size"][0] / 2
+        topBorder = CONF["screen"]["size"][1] / 2
+
         if showLeft:
             datalog["hemifield"] = "left"
             screen.show_left()
-            x = random.uniform(-1 + CONF["task"]["maxRadius"],
+            x = random.uniform(-rightBorder + CONF["task"]["maxRadius"],
                                0 - CONF["task"]["maxRadius"])
         else:
             datalog["hemifield"] = "right"
             screen.show_right()
             x = random.uniform(
-                0 + CONF["task"]["maxRadius"], 1 - CONF["task"]["maxRadius"])
+                0 + CONF["task"]["maxRadius"], rightBorder - CONF["task"]["maxRadius"])
 
-        y = random.uniform(-1 + CONF["task"]["maxRadius"],
-                           1 - CONF["task"]["maxRadius"])
+        y = random.uniform(-topBorder + CONF["task"]["maxRadius"],
+                           topBorder - CONF["task"]["maxRadius"])
 
         # log
         datalog["block"] = block

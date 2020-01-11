@@ -1,4 +1,4 @@
-from psychopy import visual, core, event
+from psychopy import visual, core, event, monitors
 from psychopy.hardware import keyboard
 from psychopy.visual import textbox
 
@@ -6,12 +6,20 @@ from psychopy.visual import textbox
 class Screen:
     def __init__(self, CONF):
         self.CONF = CONF
+
+        # fetch the most recent calib for this monitor
+        mon = monitors.Monitor('tesfgft')
+        mon.setWidth(CONF["screen"]["size"][0])
+        # mon.setWidth(100)
+        mon.setSizePix(CONF["screen"]["resolution"])
+
         self.window = visual.Window(
-            # size=CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"],
+            size=CONF["screen"]["resolution"],
             color=CONF["fixation"]["colorOff"],
             # display_resolution=CONF["screen"]["resolution"],
-            monitor=CONF["screen"]["monitor"],
-            fullscr=CONF["screen"]["full"], units="cm",
+            monitor=mon,
+            fullscr=CONF["screen"]["full"],
+            # units="cm",
             allowGUI=True
         )
 
@@ -67,11 +75,11 @@ class Screen:
             lineColor=CONF["fixation"]["colorOn"],
             units="norm")
 
-        # setup stopwatch
+        # setup stimuli
         self.spot = visual.Circle(
             self.window,
             edges=100,
-            units="norm"
+            units="cm"
         )
 
     def show_overview(self):

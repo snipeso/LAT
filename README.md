@@ -26,3 +26,7 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
 
 # TODO: apply to pvt
+
+# Notes:
+
+unlike with countdown, less motivation to improve score
