@@ -134,7 +134,10 @@ for block in range(totBlocks):
         delayTimer = core.CountdownTimer(delay)
 
         extraKeys = []
+        tones = []
         while delayTimer.getTime() > 0:
+
+            # play randomly tones in the mean time
             toneDelay = random.uniform(
                 CONF["tones"]["minTime"], CONF["tones"]["maxTime"])
             toneTimer = core.CountdownTimer(toneDelay)
@@ -149,8 +152,15 @@ for block in range(totBlocks):
 
                     # Flash the fixation box to indicate unexpected key press
                     screen.flash_fixation_box()
+
             # TODO: play tone & send trigger
-            core.wait(0.0005)
+            tones.append(mainClock.getTime())
+            logging.info("tone at %s", mainClock.getTime())
+
+        # log data
+        datalog["tones"] = tones
+        datalog["extrakeypresses"] = extraKeys
+        scorer.scores["extraKeys"] += len(extraKeys)
 
         #######################
         # Stimulus presentation
@@ -226,8 +236,6 @@ for block in range(totBlocks):
             scorer.scores["tot"] += 1
 
         # save data to file
-        datalog["extrakeypresses"] = extraKeys
-        scorer.scores["extraKeys"] += len(extraKeys)
         datalog.flush()
 
     # Brief blank period to rest eyes and signal block change
