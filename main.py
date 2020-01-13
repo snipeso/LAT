@@ -73,6 +73,7 @@ sequence_number = 0
 for block in range(1, CONF["task"]["blocks"]):
     print(showLeft)
     showLeft = not showLeft  # switches to the opposite side after each block
+    totMissed = 0
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
 
     while blockTimer.getTime() > 0:
@@ -146,7 +147,7 @@ for block in range(1, CONF["task"]["blocks"]):
         def onFlip():  # TODO: does this go somewhere else?
             kb.clock.reset()  # this starts the keyboard clock as soon as stimulus appears
             datalog["startTime"] = mainClock.getTime()
-            # TODO: send trigger
+            # TODO: send start trigger
 
         # run stopwatch
         logging.info("waiting for shrinking to start")
@@ -170,13 +171,22 @@ for block in range(1, CONF["task"]["blocks"]):
                 radiusPercent = T/CONF["task"]["maxTime"]
 
             screen.shrink_spot(radiusPercent)
+        # TODO: response trigger
 
         #########
         # Outcome
 
-        if Missed:  # TODO: make alarm if no keypress for mroe than 5 seconds
+        if Missed:
             logging.info("missed")
             datalog["missed"] = True
+
+            # raise alarm if too many stimuli missed
+            totMissed += 1
+            if totMissed > CONF["task"]["maxMissed"]:
+                # TODO: sound alarm
+                datalog["alarm!"] = mainClock.getTime()
+                logging.warning("alarm sound!!!!!")
+
         else:
             # show result
             reactionTime = keys[0].rt
@@ -184,9 +194,13 @@ for block in range(1, CONF["task"]["blocks"]):
             screen.show_result(reactionTime)
             core.wait(CONF["fixation"]["scoreTime"])
 
+            # exit if asked
             if keys[0].name == 'q':
                 logging.warning('Forced quit during task')
                 sys.exit(3)
+
+            # reset missed count
+            totMissed = 0
 
             # save to memory
             datalog["rt"] = reactionTime
@@ -198,6 +212,7 @@ for block in range(1, CONF["task"]["blocks"]):
         datalog["extrakeypresses"] = extraKeys
         datalog.flush()
 
+    # Brief blank period to rest eyes and signal block change
     screen.show_blank()
     logging.info('Starting block switch rest period')
     core.wait(CONF["fixation"]["restTime"])

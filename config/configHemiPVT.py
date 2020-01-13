@@ -14,6 +14,7 @@ CONF.update({
         "earlyColor": "yellow",
         "color": '#FAFAFA',
         "maxRadius": 2,  # in cm of screen width
+        "maxMissed": 5
     },
     "fixation": {
         "colorOff": "black",
@@ -25,7 +26,7 @@ CONF.update({
         "minDelay":  1,  # 2,  # 2,  # in seconds, minimum delay between stimuli
         "maxDelay": 2,  # 10,  # 10,  # maximum delay between stimuli
         "scoreTime": 0.5,  # in seconds, time to show final score
-        "restTime": 5,
+        "restTime": 2,
     },
     "instructions": {
         "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the F key before it disappears. If you saw it but weren't fast enough, press the key anyway.",
