@@ -1,16 +1,6 @@
 # hemiPVT
 
-## Todo
-
-- fix visuals
-- include audio
-
-## Eventual TODOs
-
-- Provide results
-- check that the task is as described in paper
-
-# Design:
+## Design
 
 duration 16 min: 2 x 4 of each condition (for loop of list of conditions)
 (for loop of blocks)
@@ -18,7 +8,18 @@ duration 16 min: 2 x 4 of each condition (for loop of list of conditions)
 while block running, present circle with pos randomly determined
 circle diameter gets reduced as a % of timer and total timer time, freezes and turns green if caught in time
 
-# How to make it executable:
+## Todo
+
+- fix visuals
+- include audio
+- add to pvt
+
+### Eventual TODOs
+
+- Provide results
+- check that the task is as described in paper
+
+## How to make it executable
 
 1. make sure there is the file exp-hemiPVT
 2. run `code ~/.bashrc` in terminal
@@ -26,9 +27,9 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 
 Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
 
-# How to measure timing
+## How to measure timing
 
-1. Set the stimulus position to always be 0.0, and the color to be blue, and the ISI (intertrial stimulus interval) is between 1 and 2
+1. Set the stimulus position to always be 0.0, and the color to be blue, and the ISI (inter stimulus interval) is between 1 and 2
 2. on an iphone 6 or later (but better if less than XR), download the app "is it snappy"
 3. start recording just before starting the task, such that the key you will press and the screen are both in view
 4. play the task at least 20 trials
@@ -39,10 +40,6 @@ Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
      the app will calculate the difference in miliseconds. repeat until desired.
 6. open the output, identify the corresponding reaction times, subtract, and determine the average difference between filmed RTs and computer recorded RTs
 
-# TODO:
-
-- apply to pvt
-
-# Notes:
+## Notes
 
 unlike with countdown, less motivation to improve score
