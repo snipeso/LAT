@@ -3,7 +3,7 @@ from config.configSession import CONF
 CONF.update({
     "task": {
         "name": "hemiPVT",
-        "duration": 30,  # 2 * 60,  # duration of a block, in seconds
+        "duration": 2*60,  # 2 * 60,  # duration of a block, in seconds
         "blocks": 8,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
@@ -23,8 +23,8 @@ CONF.update({
         "width": .2,
         "boxColor": "red",
         "errorFlash": 0.1,  # in seconds, how long to flash box if key pushed during delay
-        "minDelay":  1,  # 2,  # 2,  # in seconds, minimum delay between stimuli
-        "maxDelay": 2,  # 10,  # 10,  # maximum delay between stimuli
+        "minDelay":  2,  # 2,  # 2,  # in seconds, minimum delay between stimuli
+        "maxDelay": 10,  # 10,  # 10,  # maximum delay between stimuli
         "scoreTime": 0.5,  # in seconds, time to show final score
         "restTime": 2,
     },

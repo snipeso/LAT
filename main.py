@@ -16,7 +16,7 @@ from config.configHemiPVT import CONF
 
 # Initialize screen, logger and inputs
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARNING,
     format='%(asctime)s-%(levelname)s-%(message)s',
 )  # This is a log for debugging the script, and prints messages to the terminal
 
@@ -52,27 +52,27 @@ def quitExperimentIf(toQuit):
 ##############
 
 
-# # Display overview of session
-# screen.show_overview()
-# core.wait(CONF["timing"]["overview"])
+# Display overview of session
+screen.show_overview()
+core.wait(CONF["timing"]["overview"])
 
-# # Optionally, display instructions
-# if CONF["showInstructions"]:
-#     screen.show_instructions()
-#     key = event.waitKeys()
-#     quitExperimentIf(key[0] == 'q')
+# Optionally, display instructions
+if CONF["showInstructions"]:
+    screen.show_instructions()
+    key = event.waitKeys()
+    quitExperimentIf(key[0] == 'q')
 
-# # Blank screen for initial rest
-# screen.show_blank()
-# logging.info('Starting blank period')
+# Blank screen for initial rest
+screen.show_blank()
+logging.info('Starting blank period')
 
-# # TODO: send start trigger
-# core.wait(CONF["timing"]["rest"])
-# # TODO: send end wait trigger
+# TODO: send start trigger
+core.wait(CONF["timing"]["rest"])
+# TODO: send end wait trigger
 
-# # Cue start of the experiment
-# screen.show_cue("START")
-# core.wait(CONF["timing"]["cue"])
+# Cue start of the experiment
+screen.show_cue("START")
+core.wait(CONF["timing"]["cue"])
 
 ##########################################################################
 
