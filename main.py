@@ -99,6 +99,7 @@ for block in range(totBlocks):
         ###############################
         # Wait a random period of time
 
+        # create delay for wait
         delay = random.uniform(
             CONF["fixation"]["minDelay"],
             CONF["fixation"]["maxDelay"]) - CONF["task"]["extraTime"]  # the extra time delay happens after stimulus presentation
@@ -134,20 +135,22 @@ for block in range(totBlocks):
 
         extraKeys = []
         while delayTimer.getTime() > 0:
+            toneDelay = random.uniform(
+                CONF["tones"]["minTime"], CONF["tones"]["maxTime"])
+            toneTimer = core.CountdownTimer(toneDelay)
 
-            # Record any extra key presses during wait
-            extraKey = kb.getKeys()
-            if extraKey:
-                quitExperimentIf(extraKey[0].name == 'q')
+            while delayTimer.getTime() > 0 and toneTimer.getTime() > 0:
+                # Record any extra key presses during wait
+                extraKey = kb.getKeys()
+                if extraKey:
+                    quitExperimentIf(extraKey[0].name == 'q')
 
-                extraKeys.append(mainClock.getTime())
+                    extraKeys.append(mainClock.getTime())
 
-                # Flash the fixation box to indicate unexpected key press
-                screen.flash_fixation_box()
-
+                    # Flash the fixation box to indicate unexpected key press
+                    screen.flash_fixation_box()
+            # TODO: play tone & send trigger
             core.wait(0.0005)
-
-        # TODO: add to scorer
 
         #######################
         # Stimulus presentation
@@ -224,6 +227,7 @@ for block in range(totBlocks):
 
         # save data to file
         datalog["extrakeypresses"] = extraKeys
+        scorer.scores["extraKeys"] += len(extraKeys)
         datalog.flush()
 
     # Brief blank period to rest eyes and signal block change

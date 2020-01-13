@@ -5,6 +5,7 @@ class Scorer:
             "late": 0,
             "RTsum": 0,
             "tot": 0,
+            "extraKeys": 0
         }
 
     def getScore(self):

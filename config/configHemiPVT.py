@@ -32,6 +32,10 @@ CONF.update({
         "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the F key before it disappears. If you saw it but weren't fast enough, press the key anyway.",
         "startPrompt": "Press any key to start. Press q to quit."
     },
+    "tones": {
+        "minTime": 1.5,
+        "maxTime": 5,
+    }
 })
 
 
