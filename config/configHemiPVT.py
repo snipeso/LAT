@@ -3,7 +3,7 @@ from config.configSession import CONF
 CONF.update({
     "task": {
         "name": "hemiPVT",
-        "duration": 2*60,  # 2 * 60,  # duration of a block, in seconds
+        "duration": 10,  # 2*60,  # 2 * 60,  # duration of a block, in seconds
         "blocks": 8,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
@@ -35,10 +35,7 @@ CONF.update({
 })
 
 
-print("old size is:")
-print(CONF["screen"]["size"])
 CONF["screen"]["size"] = CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"]
-print("new size is:")
-print(CONF["screen"]["size"])
+
 
 CONF["screen"]["resolution"] = CONF["screen"]["resolution"] if CONF["screen"]["full"] else CONF["screen"]["debugResolution"]

@@ -44,8 +44,8 @@ def quitExperimentIf(toQuit):
     if toQuit:
 
         scorer.getScore()  # TODO: see if this is ok to do
-        logging.warning('Forced quit during wait')
-        sys.exit(2)
+        logging.info('quit experiment')
+        sys.exit(2)  # TODO: make version where quit is sys 1 vs sys 2
 
 ##############
 # Introduction
@@ -82,8 +82,10 @@ core.wait(CONF["timing"]["cue"])
 
 
 sequence_number = 0
-
-for block in range(1, CONF["task"]["blocks"]):
+totBlocks = CONF["task"]["blocks"]
+for block in range(totBlocks):
+    block += 1
+    logging.info(f"{block} / {totBlocks}")
     showLeft = not showLeft  # switches to the opposite side after each block
     totMissed = 0
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
@@ -225,7 +227,7 @@ for block in range(1, CONF["task"]["blocks"]):
         datalog.flush()
 
     # Brief blank period to rest eyes and signal block change
-    screen.show_blank()
+    screen.show_cue(f"{block} / {totBlocks}", )
     logging.info('Starting block switch rest period')
     core.wait(CONF["fixation"]["restTime"])
 
