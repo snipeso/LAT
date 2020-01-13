@@ -10,7 +10,6 @@ class Screen:
         # fetch the most recent calib for this monitor
         mon = monitors.Monitor('tesfgft')
         mon.setWidth(CONF["screen"]["size"][0])
-        # mon.setWidth(100)
         mon.setSizePix(CONF["screen"]["resolution"])
 
         self.window = visual.Window(

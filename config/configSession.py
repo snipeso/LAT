@@ -2,15 +2,15 @@ CONF = {
     "participant": "01",
     "session": "1",
     "screen": {
-        "full": False,
+        "full": True,
         "color": "#6B6B6B",
         "monitor": 'Extreme',  # "testMonitor",
-        # screen size when not fullscreen TODO: rename to windows size
+        # screen size when not fullscreen
         "debugResolution":  [1000, 1000],  # [384, 216],
         "debugSize": [10, 10],
         "units": "norm",
         "resolution": [3840, 2160],
-        # Obtain from xrandr in command window TODO: rename to size
+        # Obtain from xrandr in command window
         "size": [34.4, 19.3]
     },
     "timing": {

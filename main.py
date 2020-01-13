@@ -85,7 +85,8 @@ for block in range(1, CONF["task"]["blocks"]):
         # Wait a random period of time
 
         delay = random.uniform(
-            CONF["fixation"]["minDelay"], CONF["fixation"]["maxDelay"])
+            CONF["fixation"]["minDelay"],
+            CONF["fixation"]["maxDelay"]) - CONF["task"]["extraTime"]  # the extra time delay happens after stimulus presentation
 
         # show correctly illuminated screen
         print(CONF["screen"]["size"])
@@ -140,28 +141,35 @@ for block in range(1, CONF["task"]["blocks"]):
 
         # initialize stopwatch
         Missed = False
+        Late = False
 
         def onFlip():  # TODO: does this go somewhere else?
-            kb.clock.reset()
+            kb.clock.reset()  # this starts the keyboard clock as soon as stimulus appears
             datalog["startTime"] = mainClock.getTime()
             # TODO: send trigger
 
         # run stopwatch
+        logging.info("waiting for shrinking to start")
         Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
 
         screen.start_spot(x, y)
         keys = []
-        print("hello!_______________")
-        logging.info("waiting for schrinking to start")
+
         while not keys:
             keys = kb.getKeys(waitRelease=False)
-            radiusPercent = Timer.getTime()/CONF["task"]["maxTime"]
-            screen.shrink_spot(radiusPercent)
+            T = Timer.getTime()
 
-            if Timer.getTime() <= 0:
+            if T <= -CONF["task"]["extraTime"]:  # stop waiting for keys
                 Missed = True
                 break
+            elif T <= 0:  # keep waiting for keys, but don't show stimulus
+                Late = True
+                radiusPercent = 0
+            else:  # shrink stimulus
+                radiusPercent = T/CONF["task"]["maxTime"]
+
+            screen.shrink_spot(radiusPercent)
 
         #########
         # Outcome
@@ -169,10 +177,10 @@ for block in range(1, CONF["task"]["blocks"]):
         if Missed:  # TODO: make alarm if no keypress for mroe than 5 seconds
             logging.info("missed")
             datalog["missed"] = True
-
         else:
             # show result
             reactionTime = keys[0].rt
+            logging.info('RT: %s', reactionTime)
             screen.show_result(reactionTime)
             core.wait(CONF["fixation"]["scoreTime"])
 
@@ -183,10 +191,16 @@ for block in range(1, CONF["task"]["blocks"]):
             # save to memory
             datalog["rt"] = reactionTime
             datalog["response_key"] = keys[0].name
+            if Late:
+                datalog["late"] = True
 
         # save data to file
         datalog["extrakeypresses"] = extraKeys
         datalog.flush()
+
+    screen.show_blank()
+    logging.info('Starting block switch rest period')
+    core.wait(CONF["fixation"]["restTime"])
 
 ###########
 # Concluion
