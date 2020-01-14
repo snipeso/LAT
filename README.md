@@ -16,9 +16,6 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 
 ### Eventual TODOs
 
-- Provide results
-- check that the task is as described in paper
-
 ## How to make it executable
 
 1. make sure there is the file exp-hemiPVT

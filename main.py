@@ -5,6 +5,7 @@ import time
 import sys
 # import psychtoolbox as ptb
 
+from chronometer import Chronometer
 from screen import Screen
 from scorer import Scorer
 from psychopy import core, event, sound
@@ -84,6 +85,7 @@ core.wait(CONF["timing"]["cue"])
 sequence_number = 0
 totBlocks = CONF["task"]["blocks"]
 
+
 ################################################
 # loop through blocks, switching side every time
 for block in range(totBlocks):
@@ -101,7 +103,6 @@ for block in range(totBlocks):
     # start block
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
     while blockTimer.getTime() > 0:
-
         sequence_number += 1
         logging.info('Starting iteration #%s with leftOn=#%s',
                      sequence_number, showLeft)
@@ -218,7 +219,7 @@ for block in range(totBlocks):
             totMissed += 1
 
             # raise alarm if too many stimuli missed
-            print(totMissed)
+            logging.warning("Missed: %s", totMissed)
             if totMissed > CONF["task"]["maxMissed"]:
                 # TODO: sound alarm
                 Alarm.play()

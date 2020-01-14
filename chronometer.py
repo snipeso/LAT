@@ -2,12 +2,12 @@ import time
 
 
 class Chronometer:
-    def __init__(self, name, treshold):
+    def __init__(self, name, threshold):
         self.name = name
         self.old = 0
         self.countNOK = 0
         self.countTOT = 0
-        self.treshold = treshold
+        self.treshold = threshold
 
     def lap(self):
         now = time.time()

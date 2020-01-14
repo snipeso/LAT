@@ -4,7 +4,7 @@ CONF = {
     "participant": "01",
     "session": "1",
     "screen": {
-        "full": True,
+        "full": False,
         "color": "#6B6B6B",
         "monitor": 'Extreme',  # "testMonitor",
         # screen size when not fullscreen
@@ -21,5 +21,5 @@ CONF = {
         "cue": 1
     },
     "showInstructions": True,
-    "loggingLevel": logging.INFO,  # logging.WARNING #TODO: add to pvt
+    "loggingLevel": logging.WARNING,  # logging.WARNING #TODO: add to pvt
 }
