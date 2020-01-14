@@ -12,7 +12,7 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 
 - fix visuals
 - include audio
-- add to pvt
+- triggers
 
 ### Eventual TODOs
 
