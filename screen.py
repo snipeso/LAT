@@ -144,6 +144,10 @@ class Screen:
         self.fixation_box.draw()
         self.window.flip()
 
+    def show_background(self):
+        self._draw_background()
+        self.window.flip()
+
     def _draw_background(self):
         if self.backgroundLeft:
             self.left_on.draw()

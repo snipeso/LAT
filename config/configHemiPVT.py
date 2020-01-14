@@ -32,9 +32,11 @@ CONF.update({
         "startPrompt": "Press any key to start. Press q to quit."
     },
     "tones": {
-        "minTime": 1.5,
+        "minTime": 2,
         "maxTime": 5,
-        "alarm": "horn.wav"
+        "alarm": "horn.wav",
+        "tone": "Pink50ms.wav",
+        "volume": 0.05
     }
 })
 

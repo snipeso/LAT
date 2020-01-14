@@ -3,6 +3,7 @@ import os
 import random
 import time
 import sys
+# import psychtoolbox as ptb
 
 from screen import Screen
 from scorer import Scorer
@@ -32,9 +33,6 @@ scorer = Scorer()
 
 # Experiment conditions
 showLeft = random.choice([True, False])
-
-
-mySound = sound.Sound('A')
 
 
 logging.info('Initialization completed')
@@ -144,8 +142,11 @@ for block in range(totBlocks):
             # play randomly tones in the mean time
             toneDelay = random.uniform(
                 CONF["tones"]["minTime"], CONF["tones"]["maxTime"])
-            toneTimer = core.CountdownTimer(toneDelay)
 
+            mySound = sound.Sound(os.path.join(
+                "sounds", CONF["tones"]["tone"]), volume=CONF["tones"]["volume"])
+            toneTimer = core.CountdownTimer(toneDelay)
+            logging.info("tone delay of %s", toneDelay)
             while delayTimer.getTime() > 0 and toneTimer.getTime() > 0:
                 # Record any extra key presses during wait
                 extraKey = kb.getKeys()
@@ -159,9 +160,13 @@ for block in range(totBlocks):
 
             # TODO: play tone & send trigger
 
+            if delayTimer.getTime() < 0.05:
+                break
+
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
-            mySound.play(when=nextFlip)  # sync with screen refresh
-            screen.show_background()
+            # sync with screen refresh maybe need to induce pause?
+            mySound.play(when=nextFlip)
+            screen.flash_fixation_box()
             tones.append(mainClock.getTime())
             logging.info("tone at %s", mainClock.getTime())
 
@@ -170,6 +175,7 @@ for block in range(totBlocks):
         datalog["extrakeypresses"] = extraKeys
         scorer.scores["extraKeys"] += len(extraKeys)
 
+        core.wait(CONF["task"]["extraTime"])
         #######################
         # Stimulus presentation
 
