@@ -24,6 +24,11 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 
 Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
 
+## How to reproduce the env
+
+- run `cp {env} .`
+- run `pyvenv env`
+
 ## How to measure timing
 
 1. Set the stimulus position to always be 0.0, and the color to be blue, and the ISI (inter stimulus interval) is between 1 and 2
