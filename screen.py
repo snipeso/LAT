@@ -1,3 +1,5 @@
+import random
+
 from psychopy import visual, core, event, monitors
 from psychopy.hardware import keyboard
 from psychopy.visual import textbox
@@ -74,6 +76,10 @@ class Screen:
             lineColor=CONF["fixation"]["colorOn"],
             units="norm")
 
+        self.rightBorder = CONF["screen"]["size"][0] / \
+            2  # TODO: move to screen
+        self.topBorder = CONF["screen"]["size"][1] / 2
+
         # setup stimuli
         self.spot = visual.Circle(
             self.window,
@@ -99,32 +105,40 @@ class Screen:
         self.cue.draw()
         self.window.flip()
 
-    def show_left(self):
-        self.backgroundLeft = True
-        self._draw_background()
-        self.window.flip()
+    def set_background(self, showLeft):
+        if showLeft:
+            self.backgroundLeft = True
+        else:
+            self.backgroundLeft = False
 
-    def show_right(self):
-        self.backgroundLeft = False
-        self._draw_background()
-        self.window.flip()
+        self.show_background()
+
+    def get_coordinates(self):
+        if self.backgroundLeft:
+            x = random.uniform(-self.rightBorder + self.CONF["task"]["maxRadius"],
+                               0 - self.CONF["task"]["maxRadius"])
+        else:
+            x = random.uniform(
+                0 + self.CONF["task"]["maxRadius"], self.rightBorder - self.CONF["task"]["maxRadius"])
+
+        self.x = x
+        self.y = random.uniform(-self.topBorder + self.CONF["task"]["maxRadius"],
+                                self.topBorder - self.CONF["task"]["maxRadius"])
+        return [self.x, self.y]
 
     def flash_fixation_box(self):
         self._flip_fixation_color(self.CONF["task"]["earlyColor"])
         core.wait(self.CONF["fixation"]["errorFlash"])
         self._flip_fixation_color(self.CONF["fixation"]["boxColor"])
 
-    def start_spot(self, x, y):
-        self.spot.pos = [x, y]
+    def start_spot(self):
+        self.spot.pos = [self.x, self.y]
         # TODO: make centimeter thing work, and depend on screen size
         self.spot.radius = self.CONF["task"]["maxRadius"]
         self._set_spot_color(self.CONF["task"]["color"])
         self._draw_background()
         self.spot.draw()
         self.window.flip()
-
-    # def _norm2cm(self, x, y):
-    #     return [x*self.CONF["screen"]["screenSize"][0]/2,  y*self.CONF["screen"]["screenSize"][1]/2]
 
     def shrink_spot(self, size, colored=False):
         self.spot.radius = self.CONF["task"]["maxRadius"]*size

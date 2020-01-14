@@ -43,7 +43,6 @@ def quitExperimentIf(toQuit):
     "Quit experiment if condition is met"
 
     if toQuit:
-
         scorer.getScore()  # TODO: see if this is ok to do
         logging.info('quit experiment')
         sys.exit(2)  # TODO: make version where quit is sys 1 vs sys 2
@@ -92,7 +91,10 @@ for block in range(totBlocks):
     # set counters
     block += 1
     totMissed = 0
+
+    # set hemifield
     showLeft = not showLeft  # switches visual field
+    screen.set_background(showLeft)
 
     logging.info(f"{block} / {totBlocks}")
 
@@ -112,31 +114,7 @@ for block in range(totBlocks):
             CONF["fixation"]["minDelay"],
             CONF["fixation"]["maxDelay"]) - CONF["task"]["extraTime"]  # the extra time delay happens after stimulus presentation
 
-        # show correctly illuminated screen
-        rightBorder = CONF["screen"]["size"][0] / 2  # TODO: move to screen
-        topBorder = CONF["screen"]["size"][1] / 2
-
-        if showLeft:
-            datalog["hemifield"] = "left"
-            screen.show_left()
-            x = random.uniform(-rightBorder + CONF["task"]["maxRadius"],
-                               0 - CONF["task"]["maxRadius"])
-        else:
-            datalog["hemifield"] = "right"
-            screen.show_right()
-            x = random.uniform(
-                0 + CONF["task"]["maxRadius"], rightBorder - CONF["task"]["maxRadius"])
-
-        y = random.uniform(-topBorder + CONF["task"]["maxRadius"],
-                           topBorder - CONF["task"]["maxRadius"])
-
-        # log
-        datalog["block"] = block
-        datalog["sequence_number"] = sequence_number
-        datalog["delay"] = delay
-        datalog["position"] = [x, y]
-        logging.info(
-            'Starting delay of %s seconds in position x=%s, y=%s', delay, x, y)
+        logging.info('Starting delay of %s seconds', delay)
 
         # start delay
         delayTimer = core.CountdownTimer(delay)
@@ -180,13 +158,22 @@ for block in range(totBlocks):
             logging.info("tone at %s", mainClock.getTime())
 
         # log data
+        datalog["hemifield"] = "left" if showLeft else "right"
+        datalog["block"] = block
+        datalog["sequence_number"] = sequence_number
+        datalog["delay"] = delay
         datalog["tones"] = tones
         datalog["extrakeypresses"] = extraKeys
         scorer.scores["extraKeys"] += len(extraKeys)
 
         core.wait(CONF["task"]["extraTime"])
+
         #######################
         # Stimulus presentation
+
+        # create new x and y
+        coordinates = screen.get_coordinates()
+        datalog["position_x_y"] = coordinates
 
         # initialize stopwatch
         Missed = False
@@ -202,7 +189,7 @@ for block in range(totBlocks):
         Timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
 
-        screen.start_spot(x, y)
+        screen.start_spot()
         keys = []
 
         while not keys:
@@ -244,6 +231,7 @@ for block in range(totBlocks):
             logging.info('RT: %s', reactionTime)
             screen.show_result(reactionTime)
             core.wait(CONF["fixation"]["scoreTime"])
+            screen.show_background()
 
             # exit if asked
             quitExperimentIf(keys[0].name == 'q')
