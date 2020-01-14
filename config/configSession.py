@@ -21,5 +21,5 @@ CONF = {
         "cue": 1
     },
     "showInstructions": True,
-    "loggingLevel": logging.WARNING,  # logging.WARNING #TODO: add to pvt
+    "loggingLevel": logging.INFO,  # logging.WARNING #TODO: add to pvt
 }
