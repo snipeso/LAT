@@ -1,5 +1,11 @@
 # hemiPVT
 
+## how to run
+
+- in terminal write:
+- `export participant=P00 session=1`
+- `exp-hemi-pvt`
+
 ## Design
 
 duration 16 min: 2 x 4 of each condition (for loop of list of conditions)

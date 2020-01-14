@@ -1,8 +1,9 @@
 import logging
+import os
 
 CONF = {
-    "participant": "01",
-    "session": "1",
+    "participant": os.environ.get("participant", "00"),
+    "session": os.environ.get("session", "0"),
     "screen": {
         "full": True,
         "color": "#6B6B6B",
@@ -17,7 +18,7 @@ CONF = {
     },
     "timing": {
         "rest":  1,  # 60,
-        "overview": 1,
+        "overview": 2,
         "cue": 1
     },
     "showInstructions": True,
