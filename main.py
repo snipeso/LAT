@@ -22,14 +22,13 @@ logging.basicConfig(
 )  # This is a log for debugging the script, and prints messages to the terminal
 
 screen = Screen(CONF)
+scorer = Scorer()
 datalog = Datalog(OUTPUT_FOLDER=os.path.join(
     'output', CONF["task"]["name"]), CONF=CONF)  # This is for saving data
 kb = keyboard.Keyboard()
 mainClock = core.MonotonicClock()  # starts clock for timestamping events
 Alarm = sound.Sound(os.path.join('sounds', CONF["tones"]["alarm"]),
-                    stereo=True)  # TODO: make it alarm-like
-# TODO: make it alarm-like
-scorer = Scorer()
+                    stereo=True)
 
 # Experiment conditions
 showLeft = random.choice([True, False])
@@ -82,16 +81,23 @@ core.wait(CONF["timing"]["cue"])
 # Main experiment
 #################
 
-
+# initialize variables
 sequence_number = 0
 totBlocks = CONF["task"]["blocks"]
-for block in range(totBlocks):
-    block += 1
-    logging.info(f"{block} / {totBlocks}")
-    showLeft = not showLeft  # switches to the opposite side after each block
-    totMissed = 0
-    blockTimer = core.CountdownTimer(CONF["task"]["duration"])
 
+################################################
+# loop through blocks, switching side every time
+for block in range(totBlocks):
+
+    # set counters
+    block += 1
+    totMissed = 0
+    showLeft = not showLeft  # switches visual field
+
+    logging.info(f"{block} / {totBlocks}")
+
+    # start block
+    blockTimer = core.CountdownTimer(CONF["task"]["duration"])
     while blockTimer.getTime() > 0:
 
         sequence_number += 1
@@ -107,7 +113,7 @@ for block in range(totBlocks):
             CONF["fixation"]["maxDelay"]) - CONF["task"]["extraTime"]  # the extra time delay happens after stimulus presentation
 
         # show correctly illuminated screen
-        rightBorder = CONF["screen"]["size"][0] / 2
+        rightBorder = CONF["screen"]["size"][0] / 2  # TODO: move to screen
         topBorder = CONF["screen"]["size"][1] / 2
 
         if showLeft:
@@ -132,7 +138,7 @@ for block in range(totBlocks):
         logging.info(
             'Starting delay of %s seconds in position x=%s, y=%s', delay, x, y)
 
-        # start
+        # start delay
         delayTimer = core.CountdownTimer(delay)
 
         extraKeys = []
@@ -140,15 +146,17 @@ for block in range(totBlocks):
         while delayTimer.getTime() > 0:
 
             # play randomly tones in the mean time
+            tone = sound.Sound(os.path.join(
+                "sounds", CONF["tones"]["tone"]), volume=CONF["tones"]["volume"])
+
             toneDelay = random.uniform(
                 CONF["tones"]["minTime"], CONF["tones"]["maxTime"])
 
-            mySound = sound.Sound(os.path.join(
-                "sounds", CONF["tones"]["tone"]), volume=CONF["tones"]["volume"])
             toneTimer = core.CountdownTimer(toneDelay)
             logging.info("tone delay of %s", toneDelay)
             while delayTimer.getTime() > 0 and toneTimer.getTime() > 0:
-                # Record any extra key presses during wait
+
+                #  Record any extra key presses during wait
                 extraKey = kb.getKeys()
                 if extraKey:
                     quitExperimentIf(extraKey[0].name == 'q')
@@ -158,15 +166,16 @@ for block in range(totBlocks):
                     # Flash the fixation box to indicate unexpected key press
                     screen.flash_fixation_box()
 
-            # TODO: play tone & send trigger
-
+            # don't play sound if there's less time left than the tone's duration
             if delayTimer.getTime() < 0.05:
                 break
 
+            # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
-            # sync with screen refresh maybe need to induce pause?
-            mySound.play(when=nextFlip)
-            screen.flash_fixation_box()
+            tone.play(when=nextFlip)
+            # screen.flash_fixation_box()
+
+            # log
             tones.append(mainClock.getTime())
             logging.info("tone at %s", mainClock.getTime())
 

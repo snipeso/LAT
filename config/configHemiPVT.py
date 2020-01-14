@@ -36,7 +36,7 @@ CONF.update({
         "maxTime": 5,
         "alarm": "horn.wav",
         "tone": "Pink50ms.wav",
-        "volume": 0.05
+        "volume": 0.3  # TODO: get volume to 55 db? need to test
     }
 })
 
