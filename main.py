@@ -34,6 +34,9 @@ scorer = Scorer()
 showLeft = random.choice([True, False])
 
 
+mySound = sound.Sound('A')
+
+
 logging.info('Initialization completed')
 
 #########################################################################
@@ -155,6 +158,10 @@ for block in range(totBlocks):
                     screen.flash_fixation_box()
 
             # TODO: play tone & send trigger
+
+            nextFlip = screen.window.getFutureFlipTime(clock='ptb')
+            mySound.play(when=nextFlip)  # sync with screen refresh
+            screen.show_background()
             tones.append(mainClock.getTime())
             logging.info("tone at %s", mainClock.getTime())
 
