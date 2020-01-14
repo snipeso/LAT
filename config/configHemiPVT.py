@@ -3,8 +3,8 @@ from config.configSession import CONF
 CONF.update({
     "task": {
         "name": "hemiPVT",
-        "duration": 10,  # 2*60,  # 2 * 60,  # duration of a block, in seconds
-        "blocks": 6,  # number of blocks, try to be even
+        "duration": 2*80,  # 2 * 60,  # duration of a block, in seconds
+        "blocks": 4,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
         # time window after stimulus disappearance when it still counts as a key response
@@ -12,7 +12,7 @@ CONF.update({
         "warningTime": 5,  # in seconds, time before a tone plays to wake participant up TODO: make this happen 1s after x consecutive lapses
         "victoryColor": "green",
         "earlyColor": "yellow",
-        "color": '#FAFAFA',
+        "color": '#F7F7F7',
         "maxRadius": 2,  # in cm of screen width
         "maxMissed": 5
     },
@@ -40,6 +40,4 @@ CONF.update({
 
 
 CONF["screen"]["size"] = CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"]
-
-
 CONF["screen"]["resolution"] = CONF["screen"]["resolution"] if CONF["screen"]["full"] else CONF["screen"]["debugResolution"]
