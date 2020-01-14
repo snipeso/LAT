@@ -228,11 +228,12 @@ for block in range(totBlocks):
             # save to memory
             datalog["rt"] = reactionTime
             datalog["response_key"] = keys[0].name
-            if Late:
-                datalog["late"] = True
-                scorer.scores["late"] += 1
-            elif reactionTime > CONF["task"]["minTime"]:
+
+            if reactionTime > CONF["task"]["minTime"]:
                 scorer.newRT(reactionTime)
+                if Late:
+                    datalog["late"] = True
+                    scorer.scores["late"] += 1
 
         # save data to file
         datalog.flush()
