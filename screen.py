@@ -113,7 +113,7 @@ class Screen:
 
         self.show_background()
 
-    def get_coordinates(self):
+    def generate_coordinates(self):
         if self.backgroundLeft:
             x = random.uniform(-self.rightBorder + self.CONF["task"]["maxRadius"],
                                0 - self.CONF["task"]["maxRadius"])

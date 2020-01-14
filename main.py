@@ -28,7 +28,7 @@ datalog = Datalog(OUTPUT_FOLDER=os.path.join(
     'output', CONF["task"]["name"]), CONF=CONF)  # This is for saving data
 kb = keyboard.Keyboard()
 mainClock = core.MonotonicClock()  # starts clock for timestamping events
-Alarm = sound.Sound(os.path.join('sounds', CONF["tones"]["alarm"]),
+alarm = sound.Sound(os.path.join('sounds', CONF["tones"]["alarm"]),
                     stereo=True)
 
 # Experiment conditions
@@ -40,13 +40,19 @@ logging.info('Initialization completed')
 #########################################################################
 
 
-def quitExperimentIf(toQuit):
+def quitExperimentIf(shouldQuit):
     "Quit experiment if condition is met"
 
-    if toQuit:
-        scorer.getScore()  # TODO: see if this is ok to do
+    if shouldQuit:
+        scorer.getScore()
         logging.info('quit experiment')
         sys.exit(2)  # TODO: make version where quit is sys 1 vs sys 2
+
+
+def onFlip():  # TODO: does this go somewhere else?
+    kb.clock.reset()  # this starts the keyboard clock as soon as stimulus appears
+    datalog["startTime"] = mainClock.getTime()
+    # TODO: send start trigger
 
 ##############
 # Introduction
@@ -82,16 +88,15 @@ core.wait(CONF["timing"]["cue"])
 #################
 
 # initialize variables
-sequence_number = 0
+stimulus_number = 0
 totBlocks = CONF["task"]["blocks"]
 
 
 ################################################
 # loop through blocks, switching side every time
-for block in range(totBlocks):
+for block in range(1, totBlocks + 1):
 
-    # set counters
-    block += 1
+    # set counter
     totMissed = 0
 
     # set hemifield
@@ -103,9 +108,9 @@ for block in range(totBlocks):
     # start block
     blockTimer = core.CountdownTimer(CONF["task"]["duration"])
     while blockTimer.getTime() > 0:
-        sequence_number += 1
+        stimulus_number += 1
         logging.info('Starting iteration #%s with leftOn=#%s',
-                     sequence_number, showLeft)
+                     stimulus_number, showLeft)
 
         ###############################
         # Wait a random period of time
@@ -136,9 +141,10 @@ for block in range(totBlocks):
             while delayTimer.getTime() > 0 and toneTimer.getTime() > 0:
 
                 #  Record any extra key presses during wait
-                extraKey = kb.getKeys()
-                if extraKey:
-                    quitExperimentIf(extraKey[0].name == 'q')
+                key = kb.getKeys()
+                if key:
+                    # TODO: make seperate function that also keeps track of q, make q in config
+                    quitExperimentIf(key[0].name == 'q')
 
                     extraKeys.append(mainClock.getTime())
 
@@ -147,7 +153,7 @@ for block in range(totBlocks):
 
             # don't play sound if there's less time left than the tone's duration
             if delayTimer.getTime() < 0.05:
-                break
+                continue
 
             # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
@@ -155,13 +161,13 @@ for block in range(totBlocks):
             # screen.flash_fixation_box()
 
             # log
-            tones.append(mainClock.getTime())
+            tones.append(mainClock.getTime())  # TODO, make this happen on flip
             logging.info("tone at %s", mainClock.getTime())
 
         # log data
         datalog["hemifield"] = "left" if showLeft else "right"
         datalog["block"] = block
-        datalog["sequence_number"] = sequence_number
+        datalog["sequence_number"] = stimulus_number
         datalog["delay"] = delay
         datalog["tones"] = tones
         datalog["extrakeypresses"] = extraKeys
@@ -173,21 +179,16 @@ for block in range(totBlocks):
         # Stimulus presentation
 
         # create new x and y
-        coordinates = screen.get_coordinates()
-        datalog["position_x_y"] = coordinates
+        coordinates = screen.generate_coordinates()
+        datalog["coordinates"] = coordinates
 
         # initialize stopwatch
-        Missed = False
-        Late = False
-
-        def onFlip():  # TODO: does this go somewhere else?
-            kb.clock.reset()  # this starts the keyboard clock as soon as stimulus appears
-            datalog["startTime"] = mainClock.getTime()
-            # TODO: send start trigger
+        missed = False
+        late = False
 
         # run stopwatch
         logging.info("waiting for shrinking to start")
-        Timer = core.CountdownTimer(CONF["task"]["maxTime"])
+        timer = core.CountdownTimer(CONF["task"]["maxTime"])
         screen.window.callOnFlip(onFlip)
 
         screen.start_spot()
@@ -195,16 +196,16 @@ for block in range(totBlocks):
 
         while not keys:
             keys = kb.getKeys(waitRelease=False)
-            T = Timer.getTime()
+            now = timer.getTime()
 
-            if T <= -CONF["task"]["extraTime"]:  # stop waiting for keys
-                Missed = True
+            if now <= -CONF["task"]["extraTime"]:  # stop waiting for keys
+                missed = True
                 break
-            elif T <= 0:  # keep waiting for keys, but don't show stimulus
-                Late = True
+            elif now <= 0:  # keep waiting for keys, but don't show stimulus
+                late = True
                 radiusPercent = 0
             else:  # shrink stimulus
-                radiusPercent = T/CONF["task"]["maxTime"]
+                radiusPercent = now/CONF["task"]["maxTime"]
 
             screen.shrink_spot(radiusPercent)
         # TODO: response trigger
@@ -212,7 +213,7 @@ for block in range(totBlocks):
         #########
         # Outcome
 
-        if Missed:
+        if missed:
             logging.info("missed")
             datalog["missed"] = True
             scorer.scores["missed"] += 1
@@ -222,8 +223,8 @@ for block in range(totBlocks):
             logging.warning("Missed: %s", totMissed)
             if totMissed > CONF["task"]["maxMissed"]:
                 # TODO: sound alarm
-                Alarm.play()
-                datalog["alarm!"] = mainClock.getTime()
+                alarm.play()
+                datalog["alarm"] = mainClock.getTime()
                 logging.warning("alarm sound!!!!!")
 
         else:
@@ -246,7 +247,7 @@ for block in range(totBlocks):
 
             if reactionTime > CONF["task"]["minTime"]:
                 scorer.newRT(reactionTime)
-                if Late:
+                if late:
                     datalog["late"] = True
                     scorer.scores["late"] += 1
 
