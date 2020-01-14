@@ -25,8 +25,9 @@ datalog = Datalog(OUTPUT_FOLDER=os.path.join(
     'output', CONF["task"]["name"]), CONF=CONF)  # This is for saving data
 kb = keyboard.Keyboard()
 mainClock = core.MonotonicClock()  # starts clock for timestamping events
-Alarm = sound.Sound('600', secs=0.01, sampleRate=44100,
+Alarm = sound.Sound(os.path.join('sounds', CONF["tones"]["alarm"]),
                     stereo=True)  # TODO: make it alarm-like
+# TODO: make it alarm-like
 scorer = Scorer()
 
 # Experiment conditions
@@ -205,10 +206,13 @@ for block in range(totBlocks):
             logging.info("missed")
             datalog["missed"] = True
             scorer.scores["missed"] += 1
+            totMissed += 1
 
             # raise alarm if too many stimuli missed
+            print(totMissed)
             if totMissed > CONF["task"]["maxMissed"]:
                 # TODO: sound alarm
+                Alarm.play()
                 datalog["alarm!"] = mainClock.getTime()
                 logging.warning("alarm sound!!!!!")
 

@@ -9,12 +9,11 @@ CONF.update({
         "maxTime": .5,  # over this, RT considered a lapse
         # time window after stimulus disappearance when it still counts as a key response
         "extraTime": .5,
-        "warningTime": 5,  # in seconds, time before a tone plays to wake participant up TODO: make this happen 1s after x consecutive lapses
         "victoryColor": "green",
         "earlyColor": "yellow",
         "color": '#F7F7F7',
         "maxRadius": 2,  # in cm of screen width
-        "maxMissed": 5
+        "maxMissed": 3
     },
     "fixation": {
         "colorOff": "black",
@@ -35,6 +34,7 @@ CONF.update({
     "tones": {
         "minTime": 1.5,
         "maxTime": 5,
+        "alarm": "horn.wav"
     }
 })
 
