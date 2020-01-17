@@ -27,6 +27,7 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 1. make sure there is the file exp-hemiPVT
 2. run `code ~/.bashrc` in terminal
 3. add at the bottom: `export PATH=~/Projects/hemi-pvt/:$PATH`
+4. give permission to use that file: `chmod +x Projects/hemi-pvt/exp-hemiPVT`
 
 Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
 

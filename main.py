@@ -8,6 +8,7 @@ import sys
 from chronometer import Chronometer
 from screen import Screen
 from scorer import Scorer
+from trigger import Trigger
 from psychopy import core, event, sound
 from psychopy.hardware import keyboard
 
