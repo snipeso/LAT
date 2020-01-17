@@ -40,6 +40,11 @@ CONF.update({
     }
 })
 
-
+# adjust screen based on full or not
 CONF["screen"]["size"] = CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"]
 CONF["screen"]["resolution"] = CONF["screen"]["resolution"] if CONF["screen"]["full"] else CONF["screen"]["debugResolution"]
+
+# additional triggers
+CONF["trigger"]["labels"]["StartBlockLeft"] = 0x0A
+CONF["trigger"]["labels"]["StartBlockRight"] = 0x0B
+CONF["trigger"]["labels"]["Tone"] = 0x0C

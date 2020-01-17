@@ -82,12 +82,13 @@ if CONF["showInstructions"]:
 screen.show_blank()
 logging.info('Starting blank period')
 
-# TODO: send start trigger
+trigger.send("StartBlank")
 core.wait(CONF["timing"]["rest"])
-# TODO: send end wait trigger
+trigger.send("EndBlank")
 
 # Cue start of the experiment
 screen.show_cue("START")
+trigger.send("Start")
 core.wait(CONF["timing"]["cue"])
 
 ##########################################################################
@@ -111,6 +112,10 @@ for block in range(1, totBlocks + 1):
     # set hemifield
     showLeft = not showLeft  # switches visual field
     screen.set_background(showLeft)
+    if showLeft:
+        trigger.send("StartBlockLeft")
+    else:
+        trigger.send("StartBlockRight")
 
     logging.info(f"{block} / {totBlocks}")
 
@@ -154,7 +159,7 @@ for block in range(1, totBlocks + 1):
                 if key:
                     # TODO: make seperate function that also keeps track of q, make q in config
                     quitExperimentIf(key[0].name == 'q')
-
+                    trigger.send("BadResponse")
                     extraKeys.append(mainClock.getTime())
 
                     # Flash the fixation box to indicate unexpected key press
@@ -167,7 +172,8 @@ for block in range(1, totBlocks + 1):
             # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
             tone.play(when=nextFlip)
-            # screen.flash_fixation_box()
+            # TODO: figure out how to make the timing perfect!!
+            trigger.send("Tone")
 
             # log
             tones.append(mainClock.getTime())  # TODO, make this happen on flip
@@ -206,7 +212,8 @@ for block in range(1, totBlocks + 1):
         while not keys:
             keys = kb.getKeys(waitRelease=False)
             now = timer.getTime()
-
+            if keys:
+                trigger.send("Response")
             if now <= -CONF["task"]["extraTime"]:  # stop waiting for keys
                 missed = True
                 break
@@ -217,7 +224,6 @@ for block in range(1, totBlocks + 1):
                 radiusPercent = now/CONF["task"]["maxTime"]
 
             screen.shrink_spot(radiusPercent)
-        # TODO: response trigger
 
         #########
         # Outcome
@@ -231,7 +237,7 @@ for block in range(1, totBlocks + 1):
             # raise alarm if too many stimuli missed
             logging.warning("Missed: %s", totMissed)
             if totMissed > CONF["task"]["maxMissed"]:
-                # TODO: sound alarm
+                trigger.send("ALARM")
                 alarm.play()
                 datalog["alarm"] = mainClock.getTime()
                 logging.warning("alarm sound!!!!!")
@@ -273,17 +279,12 @@ for block in range(1, totBlocks + 1):
 
 # End main experiment
 screen.show_cue("DONE!")
+trigger.send("End")
 core.wait(CONF["timing"]["cue"])
-
-# Get data score
-
 
 # Blank screen for final rest
 screen.show_blank()
 logging.info('Starting blank period')
-
-
-quitExperimentIf(True)
 
 trigger.send("StartBlank")
 core.wait(CONF["timing"]["rest"])
