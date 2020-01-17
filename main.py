@@ -32,6 +32,9 @@ mainClock = core.MonotonicClock()  # starts clock for timestamping events
 alarm = sound.Sound(os.path.join('sounds', CONF["tones"]["alarm"]),
                     stereo=True)
 
+trigger = Trigger(CONF["trigger"]["serial_device"],
+                  CONF["sendTriggers"], CONF["trigger"]["labels"])
+
 # Experiment conditions
 showLeft = random.choice([True, False])
 
@@ -41,19 +44,24 @@ logging.info('Initialization completed')
 #########################################################################
 
 
-def quitExperimentIf(shouldQuit):
+def quitExperimentIf(toQuit):
     "Quit experiment if condition is met"
 
-    if shouldQuit:
+    if toQuit:
+
         scorer.getScore()
         logging.info('quit experiment')
-        sys.exit(2)  # TODO: make version where quit is sys 1 vs sys 2
+        trigger.send("Quit")
+        trigger.reset()
+        sys.exit(2)
 
 
-def onFlip():  # TODO: does this go somewhere else?
-    kb.clock.reset()  # this starts the keyboard clock as soon as stimulus appears
+def onFlip():
+    "Send and restart clocks as soon as screen changes"
+    trigger.send("Stim")
+    kb.clock.reset()
     datalog["startTime"] = mainClock.getTime()
-    # TODO: send start trigger
+
 
 ##############
 # Introduction
@@ -273,11 +281,15 @@ core.wait(CONF["timing"]["cue"])
 # Blank screen for final rest
 screen.show_blank()
 logging.info('Starting blank period')
-# TODO: send start trigger
-core.wait(CONF["timing"]["rest"])
-# TODO: send end wait trigger
-
-logging.info('Finished')
 
 
 quitExperimentIf(True)
+
+trigger.send("StartBlank")
+core.wait(CONF["timing"]["rest"])
+trigger.send("EndBlank")
+
+
+logging.info('Finished')
+scorer.getScore()
+trigger.reset()
