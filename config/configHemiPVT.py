@@ -3,7 +3,7 @@ from config.configSession import CONF
 CONF.update({
     "task": {
         "name": "hemiPVT",
-        "duration": 2*80,  # 2 * 60,  # duration of a block, in seconds
+        "duration": 2.5*60,  # duration of a block, in seconds
         "blocks": 4,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
@@ -28,7 +28,7 @@ CONF.update({
         "restTime": 2,
     },
     "instructions": {
-        "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the F key before it disappears. If you saw it but weren't fast enough, press the key anyway. Little noise bursts will be presented throughout. Do NOT push any button in response to sounds.",
+        "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the shift key before it disappears. If you saw it but weren't fast enough, press the key anyway. Little noise bursts will be presented throughout. Do NOT push any button in response to sounds.",
         "startPrompt": "Press any key to start. Press q to quit."
     },
     "tones": {

@@ -17,10 +17,10 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 ## Todo
 
 - fix visuals
-- include audio
-- triggers
 
 ### Eventual TODOs
+
+- move session info to instructions
 
 ## How to make it executable
 
