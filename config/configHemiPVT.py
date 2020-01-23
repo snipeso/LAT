@@ -1,9 +1,10 @@
-from config.configSession import CONF
+from config.updateConfig import UpdateConfig
 
-CONF.update({
+hemipvtCONF = {
     "task": {
         "name": "hemiPVT",
-        "duration": 2.5*60,  # duration of a block, in seconds
+        # duration of a block, in seconds
+        "duration": {"versionMain": 2.5*60, "versionDemo": 60, "versionDebug": 20},
         "blocks": 4,  # number of blocks, try to be even
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
@@ -18,8 +19,8 @@ CONF.update({
     "fixation": {
         "colorOff": "black",
         "colorOn": "white",
-        "height": .1,
-        "width": .2,
+        "height": 1,
+        "width": 2,
         "boxColor": "red",
         "errorFlash": 0.1,  # in seconds, how long to flash box if key pushed during delay
         "minDelay":  2,  # 1   # in seconds, minimum delay between stimuli. these values compensate for other delays introduced in the process
@@ -36,15 +37,18 @@ CONF.update({
         "maxTime": 3,
         "alarm": "horn.wav",
         "tone": "Pink50ms.wav",
-        "volume": 0.3  # TODO: get volume to 55 db? need to test
+        "volume": 0.3  # TODO
     }
-})
+}
 
-# adjust screen based on full or not
-CONF["screen"]["size"] = CONF["screen"]["size"] if CONF["screen"]["full"] else CONF["screen"]["debugSize"]
-CONF["screen"]["resolution"] = CONF["screen"]["resolution"] if CONF["screen"]["full"] else CONF["screen"]["debugResolution"]
+hemipvtTriggers = {
+    "StartBlockLeft": 10,
+    "StartBlockRight": 11,
+    "StartBlockTone": 12,
+}
 
-# additional triggers
-CONF["trigger"]["labels"]["StartBlockLeft"] = 0x0A
-CONF["trigger"]["labels"]["StartBlockRight"] = 0x0B
-CONF["trigger"]["labels"]["Tone"] = 0x0C
+updateCofig = UpdateConfig()
+updateCofig.addContent(hemipvtCONF)
+updateCofig.addTriggers(hemipvtTriggers)
+
+CONF = updateCofig.getConfig()
