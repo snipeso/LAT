@@ -32,7 +32,7 @@ datalog = Datalog(OUTPUT_FOLDER=os.path.join(
 kb = keyboard.Keyboard()
 mainClock = core.MonotonicClock()  # starts clock for timestamping events
 
-Alarm = sound.Sound(os.path.join('sounds', CONF["instructions"]["alarm"]),
+alarm = sound.Sound(os.path.join('sounds', CONF["instructions"]["alarm"]),
                     stereo=True)
 
 trigger = Trigger(CONF["trigger"]["serial_device"],
@@ -165,6 +165,7 @@ for block in range(1, totBlocks + 1):
                     quitExperimentIf(key[0].name == 'q')
                     trigger.send("BadResponse")
                     extraKeys.append(mainClock.getTime())
+                    print(key[0].name)
 
                     # Flash the fixation box to indicate unexpected key press
                     screen.flash_fixation_box()
@@ -240,7 +241,7 @@ for block in range(1, totBlocks + 1):
 
             # raise alarm if too many stimuli missed
             logging.warning("Missed: %s", totMissed)
-            if totMissed > CONF["task"]["maxMissed"]:
+            if totMissed >= CONF["task"]["maxMissed"]:
                 trigger.send("ALARM")
                 alarm.play()
                 datalog["alarm"] = mainClock.getTime()
