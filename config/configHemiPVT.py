@@ -30,12 +30,12 @@ hemipvtCONF = {
     },
     "instructions": {
         "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the shift key before it disappears. If you saw it but weren't fast enough, press the key anyway. Little noise bursts will be presented throughout. Do NOT push any button in response to sounds.",
-        "startPrompt": "Press any key to start. Press q to quit."
+        "startPrompt": "Press any key to start. Press q to quit.",
+        "alarm": "horn.wav",
     },
     "tones": {
         "minTime": 1.5,
         "maxTime": 3,
-        "alarm": "horn.wav",
         "tone": "Pink50ms.wav",
         "volume": 0.3  # TODO
     }
@@ -44,7 +44,7 @@ hemipvtCONF = {
 hemipvtTriggers = {
     "StartBlockLeft": 10,
     "StartBlockRight": 11,
-    "StartBlockTone": 12,
+    "Tone": 12,
 }
 
 updateCofig = UpdateConfig()
