@@ -26,29 +26,30 @@ class Screen:
 
         # set up instructions and overview
         self.task = visual.TextStim(self.window,
-                                    # pos=[0, 0],
                                     text=CONF["task"]["name"],
                                     alignHoriz='center',
                                     alignVert='center',
-                                    height=.3,
-                                    pos=(0, 0),  # TEMP
-                                    units="norm"
+                                    height=CONF["instructionSizes"]["taskHeight"],
+                                    pos=CONF["instructionSizes"]["taskPos"],
+                                    units="cm"
                                     )
         self.session = visual.TextStim(self.window,
                                        text="P" + CONF["participant"] +
-                                       " Session " + CONF["session"],
-                                       pos=[.75, -.3],  # TEMP
-                                       height=.1,
+                                       " Session " +
+                                       CONF["session"] + " " +
+                                       CONF["version"],
+                                       pos=CONF["instructionSizes"]["sessionPos"],
+                                       height=CONF["instructionSizes"]["sessionHeight"],
                                        alignHoriz='center',
                                        alignVert='center',
-                                       units="norm"
+                                       units="cm"
                                        )
 
         self.instructions = visual.TextStim(
-            self.window, text=CONF["instructions"]["text"], height=.05)
+            self.window, text=CONF["instructions"]["text"], height=CONF["instructionSizes"]["instructionsHeight"], units="cm")
 
         self.startPrompt = visual.TextStim(
-            self.window, text=CONF["instructions"]["startPrompt"], height=0.05, pos=[0, -.3])
+            self.window, text=CONF["instructions"]["startPrompt"], height=CONF["instructionSizes"]["startPromptHeight"], units="cm", pos=(0, -CONF["screen"]["size"][1]/2+3))
 
         self.cue = visual.TextStim(self.window)
 
@@ -58,7 +59,7 @@ class Screen:
             width=CONF["fixation"]["width"],
             fillColor=CONF["fixation"]["boxColor"],
             lineColor=CONF["fixation"]["boxColor"],
-            units=CONF["screen"]["units"])
+            units="cm")
 
         self.left_on = visual.Rect(
             self.window, height=2,
@@ -93,6 +94,8 @@ class Screen:
         self.window.flip()
 
     def show_instructions(self):
+        self.session.pos = (0, self.CONF["screen"]["size"][1]/2-1)
+        self.session.draw()
         self.instructions.draw()
         self.startPrompt.draw()
         self.window.flip()
