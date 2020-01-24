@@ -13,7 +13,7 @@ hemipvtCONF = {
         "victoryColor": "green",
         "earlyColor": "yellow",
         "color": '#F7F7F7',
-        "maxRadius": 2,  # in cm of screen width
+        "maxRadius": 1,  # in cm of screen width
         "maxMissed": 3
     },
     "fixation": {
@@ -35,7 +35,7 @@ hemipvtCONF = {
     },
     "tones": {
         "minTime": 1.5,
-        "maxTime": 3,
+        "maxTime": 5,
         "tone": "Pink50ms.wav",
         "volume": 0.3  # TODO
     }
