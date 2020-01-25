@@ -14,7 +14,7 @@ hemipvtCONF = {
         "earlyColor": "yellow",
         "color": '#F7F7F7',
         "maxRadius": 1,  # in cm of screen width
-        "maxMissed": 3
+        "maxMissed": 5
     },
     "fixation": {
         "colorOff": "black",
