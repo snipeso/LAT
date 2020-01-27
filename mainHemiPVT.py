@@ -12,6 +12,7 @@ from scorer import Scorer
 from trigger import Trigger
 from psychopy import core, event, sound
 from psychopy.hardware import keyboard
+from capturePupil import CapturePupil as cp
 
 from datalog import Datalog
 from config.configHemiPVT import CONF
@@ -42,6 +43,9 @@ questionnaireReminder = sound.Sound(os.path.join(
 trigger = Trigger(CONF["trigger"]["serial_device"],
                   CONF["sendTriggers"], CONF["trigger"]["labels"])
 
+
+if CONF["recordPupils"]:
+    pupil = cp()  # TODO: find a better way!
 
 logging.info('Initialization completed')
 
@@ -87,7 +91,7 @@ screen.show_blank()
 logging.info('Starting blank period')
 
 trigger.send("StartBlank")
-core.wait(CONF["timing"]["rest"])
+core.wait(CONF["fixation"]["restTime"])
 trigger.send("EndBlank")
 
 # Cue start of the experiment
@@ -149,6 +153,7 @@ for block in range(1, totBlocks + 1):
 
         extraKeys = []
         tones = []
+        pupilSizes = []
         while delayTimer.getTime() > 0:
 
             # play randomly tones in the mean time
@@ -180,6 +185,10 @@ for block in range(1, totBlocks + 1):
 
             # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
+            if CONF["recordPupils"]:
+                pupilSizes.append(
+                    [pupil.getPupildiameter(), mainClock.getTime()])
+
             tone.play(when=nextFlip)
             # TODO: figure out how to make the timing perfect!!
             trigger.send("Tone")
@@ -196,6 +205,7 @@ for block in range(1, totBlocks + 1):
         datalog["tones"] = tones
         datalog["extrakeypresses"] = extraKeys
         scorer.scores["extraKeys"] += len(extraKeys)
+        datalog["pupilSizesTones"] = pupilSizes
 
         core.wait(CONF["task"]["extraTime"])
 
@@ -209,6 +219,10 @@ for block in range(1, totBlocks + 1):
         # initialize stopwatch
         missed = False
         late = False
+
+        if CONF["recordPupils"]:
+            datalog["preSpotPupil"] = [
+                pupil.getPupildiameter(), mainClock.getTime()]
 
         # run stopwatch
         logging.info("waiting for shrinking to start")
@@ -234,6 +248,9 @@ for block in range(1, totBlocks + 1):
 
             screen.shrink_spot(radiusPercent)
 
+        if CONF["recordPupils"]:
+            datalog["postSpotPupil"] = [
+                pupil.getPupildiameter(), mainClock.getTime()]
         #########
         # Outcome
 
@@ -296,7 +313,7 @@ screen.show_blank()
 logging.info('Starting blank period')
 
 trigger.send("StartBlank")
-core.wait(CONF["timing"]["rest"])
+core.wait(CONF["fixation"]["restTime"])
 trigger.send("EndBlank")
 
 

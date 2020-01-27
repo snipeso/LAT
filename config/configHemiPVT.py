@@ -1,6 +1,7 @@
 from config.updateConfig import UpdateConfig
 
 hemipvtCONF = {
+    "recordPupils": {"versionMain": True, "versionDemo": False, "versionDebug": False},
     "task": {
         "name": "hemiPVT",
         # duration of a block, in seconds
