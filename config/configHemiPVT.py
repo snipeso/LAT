@@ -4,8 +4,9 @@ hemipvtCONF = {
     "task": {
         "name": "hemiPVT",
         # duration of a block, in seconds
-        "duration": {"versionMain": 2.5*60, "versionDemo": 60, "versionDebug": 20},
-        "blocks": 6,  # number of blocks, try to be even
+        "duration": {"versionMain": 2.5*60, "versionDemo": 30, "versionDebug": 20},
+        # number of blocks, try to be even
+        "blocks": {"versionMain": 6, "versionDemo": 2, "versionDebug": 2},
         "minTime": .1,  # in seconds, min time to be considered a valid RT
         "maxTime": .5,  # over this, RT considered a lapse
         # time window after stimulus disappearance when it still counts as a key response
