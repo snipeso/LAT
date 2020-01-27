@@ -32,6 +32,7 @@ hemipvtCONF = {
         "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the shift key before it disappears. If you saw it but weren't fast enough, press the key anyway. Little noise bursts will be presented throughout. Do NOT push any button in response to sounds.",
         "startPrompt": "Press any key to start. Press q to quit.",
         "alarm": "horn.wav",
+        "questionnaireReminder": "answerQuestionnaire.wav"
     },
     "tones": {
         "minTime": 1.5,
