@@ -28,7 +28,7 @@ hemipvtCONF = {
         "minDelay":  2,  # 1   # in seconds, minimum delay between stimuli. these values compensate for other delays introduced in the process
         "maxDelay": 10,  # 10,  # 10,  # maximum delay between stimuli
         "scoreTime": 0.5,  # in seconds, time to show final score
-        "restTime": 2,
+        "restTime": 3,
     },
     "instructions": {
         "text": "One half of the screen will be illuminated. Pay attention to that half, while keeping your gaze on the red rectangle. When a circle appears, click the shift key before it disappears. If you saw it but weren't fast enough, press the key anyway. Little noise bursts will be presented throughout. Do NOT push any button in response to sounds.",
