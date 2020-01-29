@@ -173,7 +173,6 @@ for block in range(1, totBlocks + 1):
                 #  Record any extra key presses during wait
                 key = kb.getKeys()
                 if key:
-                    # TODO: make seperate function that also keeps track of q, make q in config
                     quitExperimentIf(key[0].name == 'q')
                     trigger.send("BadResponse")
                     extraKeys.append(mainClock.getTime())
@@ -188,13 +187,12 @@ for block in range(1, totBlocks + 1):
 
             # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
-            if CONF["recordPupils"]:
-                pupilSizes.append(
-                    [pupil.getPupildiameter(), mainClock.getTime()])
+
 
             tone.play(when=nextFlip)
-            # TODO: figure out how to make the timing perfect!!
             trigger.send("Tone")
+            pupilSizes.append(
+                    [eyetracker.getPupildiameter(), mainClock.getTime()])
             eyetracker.sendTrigger("Tone")
 
             # log
@@ -224,10 +222,10 @@ for block in range(1, totBlocks + 1):
         missed = False
         late = False
 
-        if CONF["recordPupils"]:
-            datalog["preSpotPupil"] = [
-                pupil.getPupildiameter(), mainClock.getTime()]
 
+        datalog["preSpotPupil"] = [
+            eyetracker.getPupildiameter(), mainClock.getTime()]
+        eyetracker.sendTrigger("Stim")
         # run stopwatch
         logging.info("waiting for shrinking to start")
         timer = core.CountdownTimer(CONF["task"]["maxTime"])
@@ -252,9 +250,8 @@ for block in range(1, totBlocks + 1):
 
             screen.shrink_spot(radiusPercent)
 
-        if CONF["recordPupils"]:
-            datalog["postSpotPupil"] = [
-                pupil.getPupildiameter(), mainClock.getTime()]
+        datalog["postSpotPupil"] = [
+            eyetracker.getPupildiameter(), mainClock.getTime()]
         #########
         # Outcome
 

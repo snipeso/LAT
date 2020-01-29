@@ -6,7 +6,7 @@ import time
 class EyeTracker:
     def __init__(self, CONF):
         self.CONF = CONF
-        if CONF["eyetracking"] and CONF["eyetracking"] == "main":
+        if CONF["eyetracking"]:
             
 
              self.ctx = zmq.Context()
@@ -43,7 +43,7 @@ class EyeTracker:
     
     def getPupildiameter(self):
         # get pupil size
-        if self.CONF["eyetracking"] and self.CONF["eyetracking"] == "main":
+        if self.CONF["eyetracking"]:
 
         # topic, payload = self.subscriber.recv_multipart()
         # message = msgpack.loads(payload)
@@ -52,7 +52,7 @@ class EyeTracker:
     
     def sendTrigger(self, triggerName):
         # send an annotation?
-        if self.CONF["eyetracking"] and self.CONF["eyetracking"] == "main":
+        if self.CONF["eyetracking"]:
             #TODO: send a trigger
 
     def end(self):
