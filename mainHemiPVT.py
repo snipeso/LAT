@@ -12,7 +12,7 @@ from scorer import Scorer
 from trigger import Trigger
 from psychopy import core, event, sound
 from psychopy.hardware import keyboard
-from capturePupil import CapturePupil as cp
+from eyetracker import EyeTracker
 
 from datalog import Datalog
 from config.configHemiPVT import CONF
@@ -44,8 +44,7 @@ trigger = Trigger(CONF["trigger"]["serial_device"],
                   CONF["sendTriggers"], CONF["trigger"]["labels"])
 
 
-if CONF["recordPupils"]:
-    pupil = cp()  # TODO: find a better way!
+eyetracker = EyeTracker(CONF)
 
 logging.info('Initialization completed')
 
@@ -56,11 +55,11 @@ def quitExperimentIf(toQuit):
     "Quit experiment if condition is met"
 
     if toQuit:
-
         scorer.getScore()
         logging.info('quit experiment')
         trigger.send("Quit")
         trigger.reset()
+        eyetracker.end()
         sys.exit(2)
 
 
@@ -101,6 +100,8 @@ core.wait(CONF["timing"]["cue"])
 
 ##########################################################################
 
+sys.exit(2)
+
 #################
 # Main experiment
 #################
@@ -123,6 +124,7 @@ for block in range(1, totBlocks + 1):
     # set hemifield
     showLeft = not showLeft  # switches visual field
     screen.set_background(showLeft)
+    
     if showLeft:
         trigger.send("StartBlockLeft")
     else:
@@ -135,6 +137,7 @@ for block in range(1, totBlocks + 1):
     while blockTimer.getTime() > 0:
         stimulus_number += 1
         datalog["trialID"] = trigger.sendTriggerId()
+        eyetracker.sendTrigger("StartTrial")
         logging.info('Starting iteration #%s with leftOn=#%s',
                      stimulus_number, showLeft)
 
@@ -192,6 +195,7 @@ for block in range(1, totBlocks + 1):
             tone.play(when=nextFlip)
             # TODO: figure out how to make the timing perfect!!
             trigger.send("Tone")
+            eyetracker.sendTrigger("Tone")
 
             # log
             tones.append(mainClock.getTime())  # TODO, make this happen on flip
