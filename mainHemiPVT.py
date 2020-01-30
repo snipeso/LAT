@@ -116,6 +116,7 @@ core.wait(CONF["timing"]["cue"])
 
 # initialize variables
 stimulus_number = 0
+tone_number = 0
 totBlocks = CONF["task"]["blocks"]
 
 # Experiment conditions
@@ -165,7 +166,6 @@ for block in range(1, totBlocks + 1):
 
         extraKeys = []
         tones = []
-        pupilSizes = []
         while delayTimer.getTime() > 0:
 
             # play randomly tones in the mean time
@@ -201,19 +201,22 @@ for block in range(1, totBlocks + 1):
 
             tone.play(when=nextFlip)
             trigger.send("Tone")
-            eyetracker.send_trigger("Tone")
+            eyetracker.send_trigger("Tone", {"toneNumber": tone_number})
+            toneTime = mainClock.getTime()
             core.wait(CONF["tones"]["duration"])
 
             postTonePupil = [
                 eyetracker.getPupildiameter(), mainClock.getTime()]
 
             # log
-            tones.append(mainClock.getTime())  # TODO, make this happen on flip
             logging.info("tone at %s", mainClock.getTime())
-            pupilSizes.append({
+            tones.append({
+                "toneNumber": tone_number,
+                "time": toneTime,
                 "prePupil": preTonePupil,
                 "postPupil": postTonePupil
             })
+            tone_number += 1
 
         # log data
         datalog["hemifield"] = "left" if showLeft else "right"
@@ -223,7 +226,6 @@ for block in range(1, totBlocks + 1):
         datalog["tones"] = tones
         datalog["extrakeypresses"] = extraKeys
         scorer.scores["extraKeys"] += len(extraKeys)
-        datalog["pupilSizesTones"] = pupilSizes
 
         core.wait(CONF["task"]["extraTime"])
 
@@ -284,12 +286,17 @@ for block in range(1, totBlocks + 1):
                 trigger.send("ALARM")
                 alarm.play()
                 datalog["alarm"] = mainClock.getTime()
+                eyetracker.send_trigger("Alarm")
                 logging.warning("alarm sound!!!!!")
 
         else:
-            # show result
             reactionTime = keys[0].rt
+            eyetracker.send_trigger(
+                "Response", {"late": late, "RT": reactionTime})
+
             logging.info('RT: %s', reactionTime)
+
+            # show result
             screen.show_result(reactionTime)
             core.wait(CONF["fixation"]["scoreTime"])
             screen.show_background()
