@@ -12,25 +12,39 @@ from scorer import Scorer
 from trigger import Trigger
 from psychopy import core, event, sound
 from psychopy.hardware import keyboard
-from eyetracker import EyeTracker
+from pupil_labs import PupilCore
 
 from datalog import Datalog
 from config.configHemiPVT import CONF
 
 #########################################################################
 
+######################################
 # Initialize screen, logger and inputs
+
 logging.basicConfig(
     level=CONF["loggingLevel"],
     format='%(asctime)s-%(levelname)s-%(message)s',
 )  # This is a log for debugging the script, and prints messages to the terminal
 
+
+# needs to be first, so that if it doesn't succeed, it doesn't freeze everything
+eyetracker = PupilCore(ip=CONF["pupillometry"]
+                       ["ip"], port=CONF["pupillometry"]["port"], shouldRecord=CONF["recordEyetracking"])
+
+trigger = Trigger(CONF["trigger"]["serial_device"],
+                  CONF["sendTriggers"], CONF["trigger"]["labels"])
+
 screen = Screen(CONF)
+
 scorer = Scorer()
+
 datalog = Datalog(OUTPUT_FOLDER=os.path.join(
     'output', datetime.datetime.now(
     ).strftime("%Y-%m-%d")), CONF=CONF)  # This is for saving data
+
 kb = keyboard.Keyboard()
+
 mainClock = core.MonotonicClock()  # starts clock for timestamping events
 
 alarm = sound.Sound(os.path.join('sounds', CONF["instructions"]["alarm"]),
@@ -39,12 +53,6 @@ alarm = sound.Sound(os.path.join('sounds', CONF["instructions"]["alarm"]),
 questionnaireReminder = sound.Sound(os.path.join(
     'sounds', CONF["instructions"]["questionnaireReminder"]), stereo=True)
 
-
-trigger = Trigger(CONF["trigger"]["serial_device"],
-                  CONF["sendTriggers"], CONF["trigger"]["labels"])
-
-
-eyetracker = EyeTracker(CONF)
 
 logging.info('Initialization completed')
 
@@ -59,7 +67,7 @@ def quitExperimentIf(toQuit):
         logging.info('quit experiment')
         trigger.send("Quit")
         trigger.reset()
-        eyetracker.end()
+        eyetracker.stop_recording()
         sys.exit(2)
 
 
@@ -74,6 +82,7 @@ def onFlip():
 # Introduction
 ##############
 
+eyetracker.start_recording()
 
 # Display overview of session
 screen.show_overview()
@@ -100,7 +109,6 @@ core.wait(CONF["timing"]["cue"])
 
 ##########################################################################
 
-sys.exit(2)
 
 #################
 # Main experiment
@@ -124,7 +132,7 @@ for block in range(1, totBlocks + 1):
     # set hemifield
     showLeft = not showLeft  # switches visual field
     screen.set_background(showLeft)
-    
+
     if showLeft:
         trigger.send("StartBlockLeft")
     else:
@@ -137,7 +145,8 @@ for block in range(1, totBlocks + 1):
     while blockTimer.getTime() > 0:
         stimulus_number += 1
         datalog["trialID"] = trigger.sendTriggerId()
-        eyetracker.sendTrigger("StartTrial")
+        eyetracker.send_trigger(
+            "StartTrial", {"id": stimulus_number, "block": block, "showLeft": showLeft})
         logging.info('Starting iteration #%s with leftOn=#%s',
                      stimulus_number, showLeft)
 
@@ -188,16 +197,23 @@ for block in range(1, totBlocks + 1):
             # play tone on next flip TODO: see if this is ok
             nextFlip = screen.window.getFutureFlipTime(clock='ptb')
 
+            preTonePupil = [eyetracker.getPupildiameter(), mainClock.getTime()]
 
             tone.play(when=nextFlip)
             trigger.send("Tone")
-            pupilSizes.append(
-                    [eyetracker.getPupildiameter(), mainClock.getTime()])
-            eyetracker.sendTrigger("Tone")
+            eyetracker.send_trigger("Tone")
+            core.wait(CONF["tones"]["duration"])
+
+            postTonePupil = [
+                eyetracker.getPupildiameter(), mainClock.getTime()]
 
             # log
             tones.append(mainClock.getTime())  # TODO, make this happen on flip
             logging.info("tone at %s", mainClock.getTime())
+            pupilSizes.append({
+                "prePupil": preTonePupil,
+                "postPupil": postTonePupil
+            })
 
         # log data
         datalog["hemifield"] = "left" if showLeft else "right"
@@ -222,10 +238,11 @@ for block in range(1, totBlocks + 1):
         missed = False
         late = False
 
-
         datalog["preSpotPupil"] = [
-            eyetracker.getPupildiameter(), mainClock.getTime()]
-        eyetracker.sendTrigger("Stim")
+            eyetracker.getPupildiameter(), mainClock.getTime()]  # TODO: make dict
+        eyetracker.send_trigger(
+            "Stim", {"sequence_number": stimulus_number, "coordinates": coordinates})
+
         # run stopwatch
         logging.info("waiting for shrinking to start")
         timer = core.CountdownTimer(CONF["task"]["maxTime"])
@@ -321,6 +338,7 @@ trigger.send("EndBlank")
 logging.info('Finished')
 scorer.getScore()
 trigger.reset()
+eyetracker.stop_recording()
 
 questionnaireReminder.play()
 core.wait(2)

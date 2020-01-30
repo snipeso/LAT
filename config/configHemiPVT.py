@@ -1,8 +1,6 @@
 from config.updateConfig import UpdateConfig
 
 hemipvtCONF = {
-    "recordPupils": {"versionMain": False, "versionDemo": False, "versionDebug": False},
-    "eyetracking":  {"versionMain": False, "versionDemo": False, "versionDebug": False},
     "task": {
         "name": "hemiPVT",
         # duration of a block, in seconds
@@ -41,7 +39,8 @@ hemipvtCONF = {
         "minTime": 1.5,
         "maxTime": 5,
         "tone": "Pink50ms.wav",
-        "volume": 0.3  # TODO
+        "volume": 0.3,  # TODO
+        "duration": 0.05,
     }
 }
 

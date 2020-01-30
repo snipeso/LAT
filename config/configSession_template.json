@@ -24,6 +24,11 @@
     "versionDemo": false,
     "versionDebug": false
   },
+  "recordEyetracking": {
+    "versionMain": true,
+    "versionDemo": false,
+    "versionDebug": false
+  },
   "timing": {
     "overview": 1,
     "cue": 1,
@@ -50,5 +55,9 @@
       "ALARM": 8,
       "Quit": 9
     }
+  },
+  "pupillometry": {
+    "ip": "127.0.0.1",
+    "port": 50020
   }
 }
