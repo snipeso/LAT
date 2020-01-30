@@ -92,6 +92,7 @@ if CONF["showInstructions"]:
     key = event.waitKeys()
     quitExperimentIf(key[0] == 'q')
 
+# start recording and set destination folder
 eyetracker.start_recording(os.path.join(
     CONF["participant"], CONF["session"], CONF["task"]["name"]))
 
