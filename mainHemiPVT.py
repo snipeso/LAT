@@ -82,8 +82,6 @@ def onFlip():
 # Introduction
 ##############
 
-eyetracker.start_recording()
-
 # Display overview of session
 screen.show_overview()
 core.wait(CONF["timing"]["overview"])
@@ -93,6 +91,9 @@ if CONF["showInstructions"]:
     screen.show_instructions()
     key = event.waitKeys()
     quitExperimentIf(key[0] == 'q')
+
+eyetracker.start_recording(os.path.join(
+    CONF["participant"], CONF["session"], CONF["task"]["name"]))
 
 # Blank screen for initial rest
 screen.show_blank()

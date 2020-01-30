@@ -40,14 +40,14 @@ class PupilCore:
         else:
             logging.warning("Not connecting to pupil labs")
 
-    def start_recording(self):
+    def start_recording(self, filepath):
         if self.shouldRecord:
             self._notify({
                 "subject": "start_plugin",
                 "name": "Annotation_Capture",
                 "args": {}}
             )
-            self._remote.send_string("R")
+            self._remote.send_string("R {}".format(filepath))
             self._remote.recv_string()
         else:
             logging.info("Start recording pupillometry (pretend)")
