@@ -48,11 +48,9 @@ class PupilCore:
         self._remote.recv_string()
     
     def subscribe(self, topic):
-        print('subbing', topic)
         if topic in self._subscribers:
             return self._subscribers[topic]
 
-        print('cont', topic)
         sub = self._ctx.socket(zmq.SUB)
         self._remote.send_string('SUB_PORT')
         port = self._remote.recv_string()
