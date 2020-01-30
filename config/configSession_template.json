@@ -9,7 +9,7 @@
     "versionDebug": "info"
   },
   "screen": {
-    "resolution": { "versionMain": [3840, 2160], "versionDebug": [1000, 1000] },
+    "resolution": { "versionMain": [1920, 1080], "versionDebug": [1000, 1000] },
     "size": { "versionMain": [34.4, 19.3], "versionDebug": [10, 10] },
     "units": "cm",
     "full": { "versionMain": true, "versionDemo": true, "versionDebug": false }
@@ -32,7 +32,7 @@
   "timing": {
     "overview": 1,
     "cue": 1,
-    "rest": { "versionMain": 60, "versionDemo": 1, "versionDebug": 1 }
+    "rest": { "versionMain": 1, "versionDemo": 1, "versionDebug": 1 }
   },
   "instructionSizes": {
     "taskHeight": 0.5,
