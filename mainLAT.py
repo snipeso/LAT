@@ -40,8 +40,7 @@ screen = Screen(CONF)
 scorer = Scorer()
 
 datalog = Datalog(OUTPUT_FOLDER=os.path.join(
-    'output', CONF["participant"] + "_" + CONF["session"], datetime.datetime.now(
-    ).strftime("%Y-%m-%d")), CONF=CONF)  # This is for saving data TODO: apply everywhere
+    'output', CONF["participant"] + "_" + CONF["session"]), CONF=CONF)  # This is for saving data TODO: apply everywhere
 
 kb = keyboard.Keyboard()
 
