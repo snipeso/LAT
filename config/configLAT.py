@@ -4,7 +4,7 @@ latCONF = {
     "task": {
         "name": "LAT",
         # duration of a block, in seconds
-        "duration": {"versionMain": 2.5*60, "versionDemo": 30, "versionDebug": 20},
+        "duration": {"versionMain": 2*60, "versionDemo": 30, "versionDebug": 20},
         # number of blocks, try to be even
         "blocks": {"versionMain": 6, "versionDemo": 2, "versionDebug": 2},
         "minTime": .1,  # in seconds, min time to be considered a valid RT

@@ -101,7 +101,7 @@ screen.show_blank()
 logging.info('Starting blank period')
 
 trigger.send("StartBlank")
-core.wait(CONF["fixation"]["restTime"])
+core.wait(CONF["timing"]["rest"])
 trigger.send("EndBlank")
 
 # Cue start of the experiment
@@ -340,9 +340,8 @@ screen.show_blank()
 logging.info('Starting blank period')
 
 trigger.send("StartBlank")
-core.wait(CONF["fixation"]["restTime"])
+core.wait(CONF["timing"]["rest"])
 trigger.send("EndBlank")
-
 
 logging.info('Finished')
 scorer.getScore()
