@@ -2,7 +2,7 @@ from config.updateConfig import UpdateConfig
 
 hemipvtCONF = {
     "task": {
-        "name": "hemiPVT",
+        "name": "LAT",
         # duration of a block, in seconds
         "duration": {"versionMain": 2.5*60, "versionDemo": 30, "versionDebug": 20},
         # number of blocks, try to be even
