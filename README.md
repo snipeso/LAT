@@ -1,10 +1,10 @@
-# hemiPVT
+# Lateralized Attention Task (LAT)
 
 ## how to run
 
 - in terminal write:
 - `export participant=P00 session=1`
-- `exp-hemi-pvt`
+- `exp-LAT`
 
 ## Design
 
@@ -24,12 +24,12 @@ circle diameter gets reduced as a % of timer and total timer time, freezes and t
 
 ## How to make it executable
 
-1. make sure there is the file exp-hemiPVT
+1. make sure there is the file exp-LAT
 2. run `code ~/.bashrc` in terminal
-3. add at the bottom: `export PATH=~/Projects/hemi-pvt/:$PATH`
-4. give permission to use that file: `chmod +x Projects/hemi-pvt/exp-hemiPVT`
+3. add at the bottom: `export PATH=~/Projects/LAT/:$PATH`
+4. give permission to use that file: `chmod +x Projects/LAT/exp-LAT`
 
-Then from a new terminal, you can run directly `exp-hemiPVT` and it starts!
+Then from a new terminal, you can run directly `exp-LAT` and it starts!
 
 ## How to reproduce the env
 

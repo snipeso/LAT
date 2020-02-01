@@ -15,7 +15,7 @@ from psychopy.hardware import keyboard
 from pupil_labs import PupilCore
 
 from datalog import Datalog
-from config.configHemiPVT import CONF
+from config.configLAT import CONF
 
 #########################################################################
 

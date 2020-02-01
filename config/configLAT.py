@@ -1,6 +1,6 @@
 from config.updateConfig import UpdateConfig
 
-hemipvtCONF = {
+latCONF = {
     "task": {
         "name": "LAT",
         # duration of a block, in seconds
@@ -44,14 +44,14 @@ hemipvtCONF = {
     }
 }
 
-hemipvtTriggers = {
+latTriggers = {
     "StartBlockLeft": 10,
     "StartBlockRight": 11,
     "Tone": 12,
 }
 
 updateCofig = UpdateConfig()
-updateCofig.addContent(hemipvtCONF)
-updateCofig.addTriggers(hemipvtTriggers)
+updateCofig.addContent(latCONF)
+updateCofig.addTriggers(latTriggers)
 
 CONF = updateCofig.getConfig()
