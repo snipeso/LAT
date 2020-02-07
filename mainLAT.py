@@ -30,7 +30,7 @@ logging.basicConfig(
 
 # needs to be first, so that if it doesn't succeed, it doesn't freeze everything
 eyetracker = PupilCore(ip=CONF["pupillometry"]
-                       ["ip"], port=CONF["pupillometry"]["port"], shouldRecord=CONF["recordEyetracking"])
+                       ["ip"], port=CONF["pupillometry"]["port"], shouldRecord=CONF["recordEyetracking"], shouldSave=CONF["savePupillometry"])
 
 trigger = Trigger(CONF["trigger"]["serial_device"],
                   CONF["sendTriggers"], CONF["trigger"]["labels"])
