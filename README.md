@@ -1,4 +1,6 @@
 # Lateralized Attention Task (LAT)
+A reaction time task designed to identify brief lapses in spatial attention. The task lasts 12 minutes. Two minutes at a time, one half of the visual field will be illuminated, and feint gray circles will appear randomly every 2-10 seconds, and shrink within .5s, and the participant has to press a button as fast as possible. If they respond before the circle disappears, it will flash green as feedback. If 5 consecutive stimuli are missed, a car horn will ring to wake up the participant.
+
 
 ## how to run
 
